@@ -1,5 +1,5 @@
 import { CustomDate } from "@/utils";
-import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useMemo, useState } from "react";
+import { Dispatch, ReactNode, RefObject, SetStateAction, createContext, useContext, useMemo, useState } from "react";
 
 type ViewMode = "gregorian" | "fixed";
 
@@ -15,8 +15,9 @@ const CalendarContext = createContext<CalendarContextProps | undefined>(undefine
 
 const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
     const today = new CustomDate();
+
     const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
-    const [viewMode, setViewMode] = useState<ViewMode>("gregorian");
+    const [viewMode, setViewMode] = useState<ViewMode>("fixed");
 
     const values = useMemo(
         () => ({

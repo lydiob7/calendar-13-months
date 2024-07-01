@@ -33,9 +33,11 @@ const styles = StyleSheet.create({
         fontWeight: 500
     },
     day: {
-        paddingHorizontal: 1,
+        paddingHorizontal: 0,
         paddingVertical: 2,
         fontSize: 10,
-        lineHeight: 14
+        lineHeight: 14,
+        width: 14,
+        textAlign: "center"
     }
 });
