@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import GregorianMonth from "@/types/GregorianMonth";
 import FixedCalendarMonth from "@/types/FixedCalendarMonth";
 import { ThemedText } from "../ThemedText";
@@ -19,12 +19,21 @@ interface MonthProps {
 const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
     const { currentYear, today, viewMode } = useCalendarContext();
 
-    const isCurrentYear = today.getFullYear() === currentYear;
-    const isCurrentMonth = isCurrentYear && today.getMonth({ type: viewMode }) === monthsMap[monthKey];
+    const isCurrentYear = useMemo(
+        () => today.getFullYear().toString() === currentYear.toString(),
+        [currentYear, today]
+    );
+    const isCurrentMonth = useMemo(
+        () => isCurrentYear && today.getMonth({ type: viewMode }) === monthsMap[monthKey],
+        [isCurrentYear, monthKey, today, viewMode]
+    );
 
-    const days =
-        monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear())[monthKey] |
-        monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear()).default;
+    const days = useMemo(
+        () =>
+            monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear())[monthKey] ||
+            monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear()).default,
+        [currentYear, monthKey]
+    );
 
     return (
         <View style={styles.month}>

@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { ThemedText } from "../ThemedText";
-import { StyleSheet, View } from "react-native";
+import { StyleProp, StyleSheet, TextStyle, View } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useCalendarContext } from "@/context/calendarContext";
 
@@ -8,9 +8,10 @@ interface DayProps {
     day: number | null;
     isCurrentMonth: boolean;
     isSingleMonthScreen?: boolean;
+    textStyle?: StyleProp<TextStyle>;
 }
 
-const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen }) => {
+const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen, textStyle }) => {
     const { today, viewMode } = useCalendarContext();
 
     const isCurrentDay = isCurrentMonth && today.getDate({ type: viewMode }) === day;
@@ -20,6 +21,7 @@ const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen }) => {
             <ThemedText
                 style={[
                     styles.day,
+                    textStyle,
                     isCurrentDay && styles.currentDayText,
                     isSingleMonthScreen ? styles.largeText : styles.smallText
                 ]}
@@ -39,7 +41,8 @@ const styles = StyleSheet.create({
         padding: 0
     },
     currentDayText: {
-        fontWeight: 500
+        fontWeight: 500,
+        color: Colors.dark.text
     },
     day: {
         textAlign: "center"

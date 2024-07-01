@@ -1,19 +1,20 @@
 import React from "react";
-import { DimensionValue, StyleSheet, View } from "react-native";
+import { DimensionValue, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 type GridViewProps<T> = {
     data: T[];
-    renderView: (item: T) => JSX.Element;
+    renderView: (item: T, i: number) => JSX.Element;
     col?: number;
+    style?: StyleProp<ViewStyle>;
 };
 
 const GridView = <T extends any>(props: GridViewProps<T>) => {
     const { data, renderView, col = 3 } = props;
     return (
-        <View style={styles().container}>
+        <View style={[styles().container, props.style]}>
             {data.map((item, i) => (
                 <View key={i} style={styles(col).item}>
-                    {renderView(item)}
+                    {renderView(item, i)}
                 </View>
             ))}
         </View>

@@ -43,6 +43,7 @@ const MonthViewScreen: FC<MonthViewScreenProps> = ({ month, year }) => {
                             <ThemedText style={styles.weekDay}>{dayOfTheWeek}</ThemedText>
                         )}
                         col={7}
+                        style={styles.weekDaysRow}
                     />
                     {divideMonthIntoWeeks({ days, startDay }).map((week, i) => (
                         <Week days={week} isCurrentMonth={isCurrentMonth} key={i} isSingleMonthScreen />
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     },
     month: {
         paddingHorizontal: 0,
-        paddingVertical: 5
+        paddingVertical: 0
     },
     monthTitle: {
         fontSize: 26,
@@ -72,7 +73,12 @@ const styles = StyleSheet.create({
     weekDay: {
         color: Colors.dark.tint,
         fontWeight: 600,
-        marginTop: 12
+        fontSize: 12
+    },
+    weekDaysRow: {
+        backgroundColor: Colors.dark.background,
+        paddingTop: 8,
+        paddingBottom: 4
     },
     weeksWrapper: {}
 });
