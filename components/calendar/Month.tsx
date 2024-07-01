@@ -9,6 +9,7 @@ import DayOutOfTime from "./DayOutOfTime";
 import language from "@/config/languages";
 import { Colors } from "@/constants/Colors";
 import { useCalendarContext } from "@/context/calendarContext";
+import { Link } from "expo-router";
 
 interface MonthProps {
     monthKey: GregorianMonth | FixedCalendarMonth;
@@ -38,11 +39,13 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
             {monthKey === "day-out-of-time" ? (
                 <DayOutOfTime />
             ) : (
-                <View style={styles.weeksWrapper}>
-                    {divideMonthIntoWeeks({ days, startDay }).map((week, i) => (
-                        <Week days={week} isCurrentMonth={isCurrentMonth} key={i} />
-                    ))}
-                </View>
+                <Link href={`month/${currentYear}/${monthKey}`}>
+                    <View style={styles.weeksWrapper}>
+                        {divideMonthIntoWeeks({ days, startDay }).map((week, i) => (
+                            <Week days={week} isCurrentMonth={isCurrentMonth} key={i} />
+                        ))}
+                    </View>
+                </Link>
             )}
         </View>
     );

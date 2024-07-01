@@ -7,16 +7,25 @@ import { useCalendarContext } from "@/context/calendarContext";
 interface DayProps {
     day: number | null;
     isCurrentMonth: boolean;
+    isSingleMonthScreen?: boolean;
 }
 
-const Day: FC<DayProps> = ({ day, isCurrentMonth }) => {
+const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen }) => {
     const { today, viewMode } = useCalendarContext();
 
     const isCurrentDay = isCurrentMonth && today.getDate({ type: viewMode }) === day;
 
     return (
-        <View style={{ ...(isCurrentDay ? styles.currentDay : {}) }}>
-            <ThemedText style={{ ...styles.day, ...(isCurrentDay ? styles.currentDayText : {}) }}>{day}</ThemedText>
+        <View style={[isCurrentDay && styles.currentDay]}>
+            <ThemedText
+                style={[
+                    styles.day,
+                    isCurrentDay && styles.currentDayText,
+                    isSingleMonthScreen ? styles.largeText : styles.smallText
+                ]}
+            >
+                {day}
+            </ThemedText>
         </View>
     );
 };
@@ -33,11 +42,18 @@ const styles = StyleSheet.create({
         fontWeight: 500
     },
     day: {
+        textAlign: "center"
+    },
+    largeText: {
+        padding: 4,
+        fontSize: 20,
+        lineHeight: 24
+    },
+    smallText: {
         paddingHorizontal: 0,
         paddingVertical: 2,
         fontSize: 10,
         lineHeight: 14,
-        width: 14,
-        textAlign: "center"
+        width: 14
     }
 });

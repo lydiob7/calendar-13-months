@@ -22,40 +22,22 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
     return (
         <>
             <View style={styles.container}>
-                <Dropdown
-                    data={[{ label: currentYear.toString(), value: currentYear.toString() }]}
-                    labelField="label"
-                    valueField="value"
-                    maxHeight={400}
-                    value={currentYear.toString()}
-                    selectedTextStyle={[styles.yearTitle, isCurrentYear ? styles.currentYear : {}]}
-                    style={styles.yearPicker}
-                    onChange={(item) => {}}
-                    renderItem={(item) => (
-                        <View style={{ backgroundColor: Colors.dark.background }}>
-                            <Picker
-                                selectedValue={currentYear}
-                                onValueChange={(itemValue, itemIndex) => setCurrentYear(itemValue)}
-                            >
-                                {Array.from(Array(5000).keys()).map((year) => (
-                                    <Picker.Item
-                                        key={year}
-                                        label={year.toString()}
-                                        value={year}
-                                        color="#fff"
-                                        style={[
-                                            styles.yearTitle,
-                                            currentYear.toString() === item.value ? styles.currentYear : {}
-                                        ]}
-                                    />
-                                ))}
-                            </Picker>
-                        </View>
-                    )}
-                    renderRightIcon={() => (
-                        <Ionicons name="chevron-down-outline" size={20} style={styles.dropdownIcon} color="white" />
-                    )}
-                />
+                <View style={{ backgroundColor: Colors.dark.background, width: 250 }}>
+                    <Picker
+                        selectedValue={currentYear}
+                        onValueChange={(itemValue, itemIndex) => setCurrentYear(itemValue)}
+                    >
+                        {Array.from(Array(5000).keys()).map((year) => (
+                            <Picker.Item
+                                key={year}
+                                label={year.toString()}
+                                value={year}
+                                color={currentYear === year ? Colors.dark.tint : "#fff"}
+                                style={styles.yearTitle}
+                            />
+                        ))}
+                    </Picker>
+                </View>
 
                 <View>
                     <Switch
@@ -79,9 +61,6 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between"
-    },
-    currentYear: {
-        color: Colors.dark.tint
     },
     dropdownIcon: {},
     pickerItem: {},
