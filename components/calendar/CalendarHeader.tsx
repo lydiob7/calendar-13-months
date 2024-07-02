@@ -45,20 +45,25 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                 </Pressable>
                 {isDropdownOpen && (
                     <View style={styles.yearPicker}>
-                        <Picker
-                            selectedValue={currentYear}
-                            onValueChange={(itemValue, itemIndex) => setCurrentYear(itemValue)}
-                        >
-                            {Array.from(Array(5000).keys()).map((year) => (
-                                <Picker.Item
-                                    key={year}
-                                    label={year.toString()}
-                                    value={year}
-                                    color={currentYear === year ? Colors.dark.tint : "#fff"}
-                                    style={styles.yearTitle}
-                                />
-                            ))}
-                        </Picker>
+                        <Pressable onPress={toggleDropdown}>
+                            <View style={styles.modalBackdrop} />
+                        </Pressable>
+                        <View style={styles.modalWrapper}>
+                            <Picker
+                                selectedValue={currentYear}
+                                onValueChange={(itemValue, itemIndex) => setCurrentYear(itemValue)}
+                            >
+                                {Array.from(Array(5000).keys()).map((year) => (
+                                    <Picker.Item
+                                        key={year}
+                                        label={year.toString()}
+                                        value={year}
+                                        color={currentYear === year ? Colors.dark.tint : "#fff"}
+                                        style={styles.yearTitle}
+                                    />
+                                ))}
+                            </Picker>
+                        </View>
                     </View>
                 )}
 
@@ -95,6 +100,22 @@ const styles = StyleSheet.create({
     rotateIcon: {
         transform: "rotate(180deg)"
     },
+    modalBackdrop: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: 500,
+        height: 1200,
+        zIndex: 3,
+        backgroundColor: "transparent"
+    },
+    modalWrapper: {
+        position: "relative",
+        backgroundColor: Colors.dark.background,
+        width: 250,
+        top: 48,
+        zIndex: 4
+    },
     yearDropdown: {
         flexDirection: "row",
         alignItems: "center",
@@ -102,10 +123,7 @@ const styles = StyleSheet.create({
     },
     yearPicker: {
         position: "absolute",
-        zIndex: 3,
-        backgroundColor: Colors.dark.background,
-        width: 250,
-        top: 48
+        zIndex: 3
     },
     yearTitle: {
         color: "#ffffff",

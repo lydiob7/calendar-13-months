@@ -1,5 +1,3 @@
-import { ThemedText } from "@/components/ThemedText";
-import CalendarContextProvider from "@/context/calendarContext";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native";
 import GregorianMonth from "@/types/GregorianMonth";
@@ -20,12 +18,10 @@ export default function MonthView() {
         >
             <Stack.Screen
                 options={{
-                    title: `${month ? language.months[month] : "Month"} - ${year}`
+                    title: `${month ? language.months[month] : "Month"} ${year}`
                 }}
             />
-            <CalendarContextProvider>
-                <MonthViewScreen month={month} year={year} />
-            </CalendarContextProvider>
+            <MonthViewScreen month={month} year={year} />
         </SafeAreaView>
     );
 }

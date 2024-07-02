@@ -51,7 +51,7 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
                 <Link href={`month/${currentYear}/${monthKey}`}>
                     <View style={styles.weeksWrapper}>
                         {divideMonthIntoWeeks({ days, startDay }).map((week, i) => (
-                            <Week days={week} isCurrentMonth={isCurrentMonth} key={i} />
+                            <Week days={week} isCurrentMonth={isCurrentMonth} key={i} monthKey={monthKey} />
                         ))}
                     </View>
                 </Link>
