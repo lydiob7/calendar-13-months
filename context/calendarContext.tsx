@@ -1,3 +1,5 @@
+import FixedCalendarMonth from "@/types/FixedCalendarMonth";
+import GregorianMonth from "@/types/GregorianMonth";
 import SelectedDate from "@/types/SelectedDate";
 import { CustomDate, fixedCalendarMonths, gregorianMonths } from "@/utils";
 import {
@@ -15,11 +17,15 @@ import {
 type ViewMode = "gregorian" | "fixed";
 
 interface CalendarContextProps {
+    currentMonth: GregorianMonth | FixedCalendarMonth | null;
     currentYear: number;
     handleSelectDate: (selectedDate: SelectedDate) => void;
     handleSelectToday: () => void;
+    preventAutomaticDaySelect: boolean;
     selectedDate: SelectedDate | null;
+    setCurrentMonth: Dispatch<SetStateAction<GregorianMonth | FixedCalendarMonth | null>>;
     setCurrentYear: Dispatch<SetStateAction<number>>;
+    setPreventAutomaticDaySelect: Dispatch<SetStateAction<boolean>>;
     setViewMode: Dispatch<SetStateAction<ViewMode>>;
     today: CustomDate;
     viewMode: ViewMode;
@@ -30,10 +36,12 @@ const CalendarContext = createContext<CalendarContextProps | undefined>(undefine
 const today = new CustomDate();
 
 const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
+    const [currentMonth, setCurrentMonth] = useState<GregorianMonth | FixedCalendarMonth | null>(null);
     const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
+    const [preventAutomaticDaySelect, setPreventAutomaticDaySelect] = useState<boolean>(false);
     const [selectedDate, setSelectedDate] = useState<SelectedDate | null>(null);
     const [viewMode, setViewMode] = useState<ViewMode>("fixed");
-
+    console.log(selectedDate);
     const handleSelectDate = useCallback((selectedDate: SelectedDate) => {
         const { date, month, year } = selectedDate;
         setSelectedDate({
@@ -60,16 +68,32 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
 
     const values = useMemo(
         () => ({
+            currentMonth,
             currentYear,
             handleSelectDate,
             handleSelectToday,
+            preventAutomaticDaySelect,
             selectedDate,
+            setCurrentMonth,
             setCurrentYear,
+            setPreventAutomaticDaySelect,
             today,
             viewMode,
             setViewMode
         }),
-        [currentYear, handleSelectDate, handleSelectToday, selectedDate, setCurrentYear, viewMode, setViewMode]
+        [
+            currentMonth,
+            currentYear,
+            handleSelectDate,
+            handleSelectToday,
+            preventAutomaticDaySelect,
+            selectedDate,
+            setCurrentMonth,
+            setCurrentYear,
+            setPreventAutomaticDaySelect,
+            viewMode,
+            setViewMode
+        ]
     );
 
     return <CalendarContext.Provider value={values}>{children}</CalendarContext.Provider>;

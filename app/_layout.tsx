@@ -31,7 +31,7 @@ export default function RootLayout() {
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
             <CalendarContextProvider>
                 <Stack>
-                    <Stack.Screen name="(tabs)" options={{ title: "Year view", headerShown: false }} />
+                    <Stack.Screen name="index" options={{ title: "Year view", headerShown: false }} />
                 </Stack>
             </CalendarContextProvider>
         </ThemeProvider>

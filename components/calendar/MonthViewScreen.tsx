@@ -1,8 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { useCalendarContext } from "@/context/calendarContext";
-import FixedCalendarMonth from "@/types/FixedCalendarMonth";
-import GregorianMonth from "@/types/GregorianMonth";
 import {
     CustomDate,
     calculateDayOfTheWeek,
@@ -19,33 +17,34 @@ import Week from "./Week";
 import GridView from "../GridView";
 import EventsList from "./EventsList";
 
-interface MonthViewScreenProps {
-    month?: GregorianMonth | FixedCalendarMonth;
-    year?: string;
-}
+interface MonthViewScreenProps {}
 
-const MonthViewScreen: FC<MonthViewScreenProps> = ({ month, year }) => {
-    const { currentYear, handleSelectDate, selectedDate, today, viewMode } = useCalendarContext();
+const MonthViewScreen: FC<MonthViewScreenProps> = () => {
+    const { currentMonth, currentYear, handleSelectDate, preventAutomaticDaySelect, selectedDate, today, viewMode } =
+        useCalendarContext();
 
     const isCurrentYear = useMemo(
         () => today.getFullYear()?.toString() === currentYear?.toString(),
         [currentYear, today]
     );
     const isCurrentMonth = useMemo(
-        () => isCurrentYear && today.getMonth({ type: viewMode }) === monthsMap[month || "january"],
-        [isCurrentYear, month, today, viewMode]
+        () => !!(isCurrentYear && currentMonth && today.getMonth({ type: viewMode }) === monthsMap[currentMonth]),
+        [currentMonth, isCurrentYear, today, viewMode]
     );
 
     const days = useMemo(
         () =>
-            month
-                ? monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear())[month] ||
+            currentMonth
+                ? monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear())[currentMonth] ||
                   monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear()).default
                 : monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear()).default,
-        [currentYear, month]
+        [currentMonth, currentYear]
     );
 
-    const startDay = useMemo(() => (month ? calculateStartDay(month, currentYear) : 0), [currentYear, month]);
+    const startDay = useMemo(
+        () => (currentMonth ? calculateStartDay(currentMonth, currentYear) : 0),
+        [currentMonth, currentYear]
+    );
 
     const selectedDateDay = useMemo(
         () => calculateDayOfTheWeek({ selectedDate, days, startDay }),
@@ -53,19 +52,19 @@ const MonthViewScreen: FC<MonthViewScreenProps> = ({ month, year }) => {
     );
 
     useEffect(() => {
-        if (month)
+        if (currentMonth && !preventAutomaticDaySelect)
             handleSelectDate({
                 date: 1,
-                month: month,
+                month: currentMonth,
                 year: currentYear
             });
-    }, [currentYear, month]);
+    }, [currentMonth, currentYear, preventAutomaticDaySelect]);
 
-    if (!month || !year) return null;
+    if (!currentMonth || !currentYear) return null;
 
     return (
         <View style={styles.month}>
-            {month === "day-out-of-time" ? (
+            {currentMonth === "day-out-of-time" ? (
                 <DayOutOfTime isSingleMonthScreen />
             ) : (
                 <View style={styles.weeksWrapper}>
@@ -87,7 +86,7 @@ const MonthViewScreen: FC<MonthViewScreenProps> = ({ month, year }) => {
                             isCurrentMonth={isCurrentMonth}
                             key={i}
                             isSingleMonthScreen
-                            monthKey={month}
+                            monthKey={currentMonth}
                         />
                     ))}
                 </View>
@@ -106,7 +105,8 @@ const styles = StyleSheet.create({
     },
     month: {
         paddingHorizontal: 0,
-        paddingVertical: 0
+        paddingVertical: 12,
+        flex: 1
     },
     monthTitle: {
         fontSize: 26,

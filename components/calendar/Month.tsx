@@ -2,14 +2,13 @@ import React, { FC, useMemo } from "react";
 import GregorianMonth from "@/types/GregorianMonth";
 import FixedCalendarMonth from "@/types/FixedCalendarMonth";
 import { ThemedText } from "../ThemedText";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { CustomDate, divideMonthIntoWeeks, monthDaysMap, monthsMap } from "@/utils";
 import Week from "./Week";
 import DayOutOfTime from "./DayOutOfTime";
 import language from "@/config/languages";
 import { Colors } from "@/constants/Colors";
 import { useCalendarContext } from "@/context/calendarContext";
-import { Link } from "expo-router";
 
 interface MonthProps {
     monthKey: GregorianMonth | FixedCalendarMonth;
@@ -17,7 +16,7 @@ interface MonthProps {
 }
 
 const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
-    const { currentYear, today, viewMode } = useCalendarContext();
+    const { currentYear, setCurrentMonth, setCurrentYear, today, viewMode } = useCalendarContext();
 
     const isCurrentYear = useMemo(
         () => today.getFullYear().toString() === currentYear.toString(),
@@ -48,13 +47,18 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
             {monthKey === "day-out-of-time" ? (
                 <DayOutOfTime />
             ) : (
-                <Link href={`month/${currentYear}/${monthKey}`}>
+                <Pressable
+                    onPress={() => {
+                        setCurrentYear(currentYear);
+                        setCurrentMonth(monthKey);
+                    }}
+                >
                     <View style={styles.weeksWrapper}>
                         {divideMonthIntoWeeks({ days, startDay }).map((week, i) => (
                             <Week days={week} isCurrentMonth={isCurrentMonth} key={i} monthKey={monthKey} />
                         ))}
                     </View>
-                </Link>
+                </Pressable>
             )}
         </View>
     );
