@@ -41,7 +41,7 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
     const [preventAutomaticDaySelect, setPreventAutomaticDaySelect] = useState<boolean>(false);
     const [selectedDate, setSelectedDate] = useState<SelectedDate | null>(null);
     const [viewMode, setViewMode] = useState<ViewMode>("fixed");
-    console.log(selectedDate);
+
     const handleSelectDate = useCallback((selectedDate: SelectedDate) => {
         const { date, month, year } = selectedDate;
         setSelectedDate({
