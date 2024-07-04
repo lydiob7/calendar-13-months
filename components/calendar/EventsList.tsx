@@ -15,16 +15,20 @@ const EventsList = () => {
 
     useEffect(() => {
         if (selectedDate) mainApiService.getDayEvents(selectedDate).then((res) => setData(res));
-    }, []);
+    }, [selectedDate]);
 
     return (
         <View style={styles.container}>
-            <FlatList
-                data={data}
-                style={styles.eventsList}
-                ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-                renderItem={({ item }) => <EventItem {...item} />}
-            />
+            {!!data.length ? (
+                <FlatList
+                    data={data}
+                    style={styles.eventsList}
+                    ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+                    renderItem={({ item }) => <EventItem {...item} />}
+                />
+            ) : (
+                <ThemedText style={styles.noEvents}>{language.common.noEventsTitle}</ThemedText>
+            )}
         </View>
     );
 };
@@ -40,5 +44,11 @@ const styles = StyleSheet.create({
     },
     eventsList: {
         marginVertical: 8
+    },
+    noEvents: {
+        fontSize: 18,
+        fontWeight: 500,
+        textAlign: "center",
+        marginTop: 20
     }
 });

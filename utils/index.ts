@@ -7,6 +7,7 @@ export { default as customDateFromDateObject } from "./customDateFromDateObject"
 export { default as daysOfTheWeek } from "./daysOfTheWeek";
 export { default as divideMonthIntoWeeks } from "./divideMonthIntoWeeks";
 export { default as fixedCalendarMonths } from "./fixedCalendarMonths";
+export * from "./fixedCalendarMonths";
 export { default as getGregorianEquivalent } from "./getGregorianEquivalent";
 export { default as gregorianMonths } from "./gregorianMonths";
 export { default as isFixedCalendarMonth } from "./isFixedCalendarMonth";

@@ -1,4 +1,5 @@
 import { CustomDate } from "@/utils";
+import { addDays, subDays } from "date-fns";
 
 interface GetMonthEventsProps {
     endDate: string;
@@ -42,10 +43,10 @@ class EventsDB {
     getDayEvents(selectedDate: string) {
         return Promise.resolve(
             this.items.filter((event) => {
-                return event;
-                // return new CustomDate(event.schedule.starts.date, { withoutTime: true }).isAfter(
-                //     new CustomDate(selectedDate, { withoutTime: true })
-                // );
+                return new CustomDate(selectedDate, { withoutTime: true }).isBetween(
+                    subDays(new Date(`${event.schedule.starts.date}T00:00:00`), 1),
+                    addDays(new Date(`${event.schedule.ends.date}T00:00:00`), 1)
+                );
             })
         );
     }

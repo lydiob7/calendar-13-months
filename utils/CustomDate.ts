@@ -18,6 +18,11 @@ class CustomDate extends Date {
         this.date = new Date(parsedDate);
     }
 
+    dayOfTheYear() {
+        // @ts-ignore
+        return Math.floor((this.date - new Date(this.date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+    }
+
     getDate(options?: MethodOptions) {
         const gregorianDate = this.date.getDate();
         if (options?.type === "fixed") {
@@ -85,11 +90,6 @@ class CustomDate extends Date {
     isLeapYear() {
         const year = this.getFullYear();
         return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-    }
-
-    dayOfTheYear() {
-        // @ts-ignore
-        return Math.floor((this.date - new Date(this.date.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
     }
 }
 

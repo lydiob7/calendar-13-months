@@ -2,6 +2,7 @@
     "common": {
         "eventsTitle": "Events",
         "monthTitle": "Month",
+        "noEventsTitle": "No events",
         "yearTitle": "Year"
     },
     "daysOfTheWeek": {

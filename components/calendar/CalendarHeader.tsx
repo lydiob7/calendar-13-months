@@ -4,7 +4,7 @@ import { ThemedText } from "../ThemedText";
 import { useCalendarContext } from "@/context/calendarContext";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { fixedCalendarMonths, gregorianMonths } from "@/utils";
+import { fixedCalendarMonthsMap, gregorianMonths } from "@/utils";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslationsContext } from "@/context/translationsContext";
 
@@ -49,7 +49,7 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
         setCurrentMonth(
             viewMode === "gregorian"
                 ? gregorianMonths[today.getMonth({ type: viewMode })]
-                : fixedCalendarMonths[today.getMonth({ type: viewMode })]
+                : fixedCalendarMonthsMap[today.getMonth({ type: viewMode })]
         );
         setPreventAutomaticDaySelect(true);
         handleSelectToday();

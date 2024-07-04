@@ -1,7 +1,7 @@
 import FixedCalendarMonth from "@/types/FixedCalendarMonth";
 import GregorianMonth from "@/types/GregorianMonth";
 import SelectedDate from "@/types/SelectedDate";
-import { CustomDate, fixedCalendarMonths, gregorianMonths } from "@/utils";
+import { CustomDate, fixedCalendarMonthsMap, gregorianMonths } from "@/utils";
 import {
     Dispatch,
     ReactNode,
@@ -57,7 +57,7 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
             month:
                 viewMode === "gregorian"
                     ? gregorianMonths[today.getMonth({ type: viewMode })]
-                    : fixedCalendarMonths[today.getMonth({ type: viewMode })],
+                    : fixedCalendarMonthsMap[today.getMonth({ type: viewMode })],
             year: today.getFullYear()
         });
     }, [handleSelectDate, viewMode]);
