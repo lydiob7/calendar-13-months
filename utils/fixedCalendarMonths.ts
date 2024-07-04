@@ -14,7 +14,7 @@ const fixedCalendarMonths: FixedCalendarMonth[] = [
     "assayuja",
     "kattika",
     "magasira",
-    "capaq raymi",
+    "capaq-raymi",
     "day-out-of-time"
 ];
 

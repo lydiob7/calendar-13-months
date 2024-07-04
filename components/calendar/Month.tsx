@@ -3,7 +3,7 @@ import GregorianMonth from "@/types/GregorianMonth";
 import FixedCalendarMonth from "@/types/FixedCalendarMonth";
 import { ThemedText } from "../ThemedText";
 import { Pressable, StyleSheet, View } from "react-native";
-import { CustomDate, divideMonthIntoWeeks, monthDaysMap, monthsMap } from "@/utils";
+import { CustomDate, DAY_OUT_OF_TIME_KEY, divideMonthIntoWeeks, LEAP_DAY_KEY, monthDaysMap, monthsMap } from "@/utils";
 import Week from "./Week";
 import DayOutOfTime from "./DayOutOfTime";
 import { Colors } from "@/constants/Colors";
@@ -35,8 +35,8 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
         [currentYear, monthKey]
     );
 
-    const dayOutOfTime = useMemo(() => monthKey === "day-out-of-time", [monthKey]);
-    const leapDay = useMemo(() => monthKey === "leap-day", [monthKey]);
+    const dayOutOfTime = useMemo(() => monthKey === DAY_OUT_OF_TIME_KEY, [monthKey]);
+    const leapDay = useMemo(() => monthKey === LEAP_DAY_KEY, [monthKey]);
 
     return (
         <View style={styles.month}>
@@ -48,8 +48,9 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
             >
                 {language.months[monthKey]}
             </ThemedText>
-            {dayOutOfTime && <DayOutOfTime monthKey="day-out-of-time" />}
-            {leapDay && <DayOutOfTime monthKey="leap-day" />}
+            {(dayOutOfTime || leapDay) && (
+                <DayOutOfTime monthKey={monthKey as typeof DAY_OUT_OF_TIME_KEY | typeof LEAP_DAY_KEY} />
+            )}
             {!leapDay && !dayOutOfTime && (
                 <Pressable
                     onPress={() => {

@@ -1,6 +1,7 @@
 export { default as calculateDayOfTheWeek } from "./calculateDayOfTheWeek";
 export { default as calculateStartDay } from "./calculateStartDay";
 export { monthsMap } from "./calculateStartDay";
+export * from "./constants";
 export { default as CustomDate } from "./CustomDate";
 export { default as daysOfTheWeek } from "./daysOfTheWeek";
 export { default as divideMonthIntoWeeks } from "./divideMonthIntoWeeks";

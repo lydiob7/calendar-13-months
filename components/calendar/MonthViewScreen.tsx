@@ -2,6 +2,8 @@ import { ThemedText } from "@/components/ThemedText";
 import { useCalendarContext } from "@/context/calendarContext";
 import {
     CustomDate,
+    DAY_OUT_OF_TIME_KEY,
+    LEAP_DAY_KEY,
     calculateDayOfTheWeek,
     calculateStartDay,
     daysOfTheWeek,
@@ -67,15 +69,15 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
             });
     }, [currentMonth, currentYear, preventAutomaticDaySelect]);
 
+    const dayOutOfTime = useMemo(() => currentMonth === DAY_OUT_OF_TIME_KEY, [currentMonth]);
+    const leapDay = useMemo(() => currentMonth === LEAP_DAY_KEY, [currentMonth]);
+
     if (!currentMonth || !currentYear) return null;
 
     return (
         <View style={styles.month}>
-            {currentMonth === "day-out-of-time" ? (
-                <DayOutOfTime isSingleMonthScreen />
-            ) : currentMonth === "leap-day" ? (
-                <DayOutOfTime />
-            ) : (
+            {(dayOutOfTime || leapDay) && <DayOutOfTime isSingleMonthScreen />}
+            {!dayOutOfTime && !leapDay && (
                 <View style={styles.weeksWrapper}>
                     <GridView
                         data={daysOfTheWeek.map((d) => language?.daysOfTheWeek?.[d])}

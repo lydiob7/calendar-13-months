@@ -1,9 +1,10 @@
 import { useCalendarContext } from "@/context/calendarContext";
+import { DAY_OUT_OF_TIME_KEY, LEAP_DAY_KEY } from "@/utils";
 import React, { FC } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface DayOutOfTimeProps {
-    monthKey?: "day-out-of-time" | "leap-day";
+    monthKey?: typeof DAY_OUT_OF_TIME_KEY | typeof LEAP_DAY_KEY;
     isSingleMonthScreen?: boolean;
 }
 
@@ -18,7 +19,7 @@ const DayOutOfTime: FC<DayOutOfTimeProps> = ({ monthKey, isSingleMonthScreen }) 
                 <TouchableOpacity
                     onPress={() => {
                         setCurrentYear(currentYear);
-                        setCurrentMonth(monthKey || "day-out-of-time");
+                        setCurrentMonth(monthKey || DAY_OUT_OF_TIME_KEY);
                     }}
                 >
                     <Image source={require("@/assets/images/day-out-of-time.png")} style={styles.image} />

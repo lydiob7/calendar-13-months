@@ -27,7 +27,7 @@ export const monthsMap = {
     assayuja: 9,
     kattika: 10,
     magasira: 11,
-    "capaq raymi": 12,
+    "capaq-raymi": 12,
     "day-out-of-time": 13,
     "leap-day": 14
 };
