@@ -3,6 +3,7 @@ export { default as calculateStartDay } from "./calculateStartDay";
 export { monthsMap } from "./calculateStartDay";
 export * from "./constants";
 export { default as CustomDate } from "./CustomDate";
+export { default as customDateFromDateObject } from "./customDateFromDateObject";
 export { default as daysOfTheWeek } from "./daysOfTheWeek";
 export { default as divideMonthIntoWeeks } from "./divideMonthIntoWeeks";
 export { default as fixedCalendarMonths } from "./fixedCalendarMonths";

@@ -44,9 +44,10 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
     const days = useMemo(
         () =>
             currentMonth
-                ? monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear())[currentMonth] ||
-                  monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear()).default
-                : monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear()).default,
+                ? monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear())[
+                      currentMonth
+                  ] || monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear()).default
+                : monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear()).default,
         [currentMonth, currentYear]
     );
 

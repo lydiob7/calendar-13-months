@@ -30,8 +30,8 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
 
     const days = useMemo(
         () =>
-            monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear())[monthKey] ||
-            monthDaysMap(new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear()).default,
+            monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear())[monthKey] ||
+            monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear()).default,
         [currentYear, monthKey]
     );
 

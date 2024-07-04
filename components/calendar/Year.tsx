@@ -11,7 +11,7 @@ const Year: FC<YearProps> = () => {
     const { currentYear, viewMode } = useCalendarContext();
 
     const months = useMemo(() => {
-        const isLeapYear = new CustomDate(`${currentYear}-02-02T00:00:00`).isLeapYear();
+        const isLeapYear = new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear();
         const fixedMonths = isLeapYear
             ? fixedCalendarMonths
             : fixedCalendarMonths.filter((month) => month !== LEAP_DAY_KEY);

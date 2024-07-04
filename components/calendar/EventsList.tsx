@@ -19,8 +19,12 @@ const EventsList = () => {
 
     return (
         <View style={styles.container}>
-            <ThemedText>{language.common.eventsTitle}</ThemedText>
-            <FlatList data={data} renderItem={({ item }) => <EventItem {...item} />} />
+            <FlatList
+                data={data}
+                style={styles.eventsList}
+                ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+                renderItem={({ item }) => <EventItem {...item} />}
+            />
         </View>
     );
 };
@@ -31,7 +35,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         width: "auto",
-        paddingHorizontal: 16,
-        marginTop: 12
+        paddingHorizontal: 4,
+        marginTop: 16
+    },
+    eventsList: {
+        marginVertical: 8
     }
 });

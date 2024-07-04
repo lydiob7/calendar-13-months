@@ -1,3 +1,5 @@
+import { CustomDate } from "@/utils";
+
 interface GetMonthEventsProps {
     endDate: string;
     startDate: string;
@@ -14,18 +16,38 @@ class EventsDB {
             schedule: {
                 allDay: true,
                 ends: {
-                    date: "2024-07-03"
+                    date: "2024-07-04"
                 },
                 starts: {
-                    date: "2024-07-03"
+                    date: "2024-07-04"
                 }
             },
             title: "First event"
+        },
+        {
+            id: "456789",
+            schedule: {
+                allDay: true,
+                ends: {
+                    date: "2024-07-04"
+                },
+                starts: {
+                    date: "2024-07-04"
+                }
+            },
+            title: "Second event"
         }
     ];
 
     getDayEvents(selectedDate: string) {
-        return Promise.resolve(this.items);
+        return Promise.resolve(
+            this.items.filter((event) => {
+                return event;
+                // return new CustomDate(event.schedule.starts.date, { withoutTime: true }).isAfter(
+                //     new CustomDate(selectedDate, { withoutTime: true })
+                // );
+            })
+        );
     }
 
     getMonthEvents({ endDate, startDate }: GetMonthEventsProps) {

@@ -1,3 +1,9 @@
+import { isAfter } from "date-fns";
+
+interface CustomDateOptions {
+    withoutTime?: boolean;
+}
+
 interface MethodOptions {
     type: "gregorian" | "fixed";
 }
@@ -5,13 +11,11 @@ interface MethodOptions {
 class CustomDate extends Date {
     date: Date = new Date();
 
-    constructor(date?: string | number | Date) {
-        // @ts-ignore
-        super(date);
+    constructor(date?: string | number | Date, options?: CustomDateOptions) {
+        const parsedDate = date ? (options?.withoutTime ? `${date}T00:00:00` : date) : new Date();
 
-        if (date) {
-            this.date = new Date(date);
-        }
+        super(parsedDate);
+        this.date = new Date(parsedDate);
     }
 
     getDate(options?: MethodOptions) {
@@ -64,6 +68,18 @@ class CustomDate extends Date {
 
     getFullYear() {
         return this.date.getFullYear();
+    }
+
+    isAfter(date: CustomDate) {
+        return isAfter(this.date, date.date);
+    }
+
+    isBefore(date: CustomDate) {
+        return isAfter(date.date, this.date);
+    }
+
+    isBetween(beforeDate: Date, afterDate: Date) {
+        return this.isAfter(new CustomDate(beforeDate)) && new CustomDate(afterDate).isAfter(this);
     }
 
     isLeapYear() {

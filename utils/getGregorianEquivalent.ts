@@ -8,7 +8,7 @@ function getGregorianEquivalent(date: SelectedDate) {
         return `${date.year}-${(monthsMap[date.month] + 1)?.toString()?.padStart(2, "0")}-${date.date
             ?.toString()
             ?.padStart(2, "0")}`;
-    const isLeapYear = new CustomDate(`${date.year}-02-02T00:00:00`).isLeapYear();
+    const isLeapYear = new CustomDate(`${date.year}-02-02`, { withoutTime: true }).isLeapYear();
     const monthIndex = monthsMap[date.month];
     let dayOfTheYear = 1;
     if (!isLeapYear || monthIndex < 6) dayOfTheYear = monthIndex * 28 + date.date;
