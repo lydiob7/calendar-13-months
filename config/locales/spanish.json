@@ -1,0 +1,49 @@
+{
+    "common": {
+        "eventsTitle": "Eventos",
+        "monthTitle": "Mes",
+        "yearTitle": "Año"
+    },
+    "daysOfTheWeek": {
+        "sunday": "DOM",
+        "monday": "LUN",
+        "tuesday": "MAR",
+        "wednesday": "MIE",
+        "thursday": "JUE",
+        "friday": "VIE",
+        "saturday": "SAB"
+    },
+    "languages": {
+        "en": "Inglés",
+        "es": "Español"
+    },
+    "months": {
+        "january": "Enero",
+        "february": "Febrero",
+        "march": "Marzo",
+        "april": "Abril",
+        "may": "Mayo",
+        "june": "Junio",
+        "july": "Julio",
+        "august": "Agosto",
+        "september": "Septiembre",
+        "october": "Octubre",
+        "november": "Noviembre",
+        "december": "Diciembre",
+        "phussa": "Phussa",
+        "magha": "Magha",
+        "phagguna": "Phagguṇa",
+        "citta": "Citta",
+        "vesakha": "Vesākha",
+        "jettha": "Jeṭṭha",
+        "asalha": "Āsāḷha",
+        "savana": "Sāvaṇa",
+        "potthapada": "Poṭṭhapāda",
+        "assayuja": "Assayuja",
+        "kattika": "Kattika",
+        "magasira": "Māgasira",
+        "capaq raymi": "Capaq Raymi",
+        "day-out-of-time": "Día sin tiempo",
+        "leap-day": "Día bisiesto"
+    }
+}

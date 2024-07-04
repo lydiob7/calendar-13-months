@@ -1,5 +1,4 @@
 import { ThemedText } from "@/components/ThemedText";
-import { Colors } from "@/constants/Colors";
 import { useCalendarContext } from "@/context/calendarContext";
 import {
     CustomDate,
@@ -16,10 +15,18 @@ import DayOutOfTime from "./DayOutOfTime";
 import Week from "./Week";
 import GridView from "../GridView";
 import EventsList from "./EventsList";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslationsContext } from "@/context/translationsContext";
 
 interface MonthViewScreenProps {}
 
 const MonthViewScreen: FC<MonthViewScreenProps> = () => {
+    const { language } = useTranslationsContext();
+
+    const backgroundColor = useThemeColor({}, "background");
+    const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
+    const textColor = useThemeColor({}, "text");
+
     const { currentMonth, currentYear, handleSelectDate, preventAutomaticDaySelect, selectedDate, today, viewMode } =
         useCalendarContext();
 
@@ -66,19 +73,28 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
         <View style={styles.month}>
             {currentMonth === "day-out-of-time" ? (
                 <DayOutOfTime isSingleMonthScreen />
+            ) : currentMonth === "leap-day" ? (
+                <DayOutOfTime />
             ) : (
                 <View style={styles.weeksWrapper}>
                     <GridView
-                        data={daysOfTheWeek}
+                        data={daysOfTheWeek.map((d) => language?.daysOfTheWeek?.[d])}
                         renderView={(dayOfTheWeek: string) => (
                             <ThemedText
-                                style={[styles.weekDay, selectedDateDay === dayOfTheWeek && styles.selectedDay]}
+                                style={[
+                                    styles.weekDay,
+                                    { color: tabIconDefaultColor },
+                                    selectedDateDay === dayOfTheWeek && { color: textColor }
+                                ]}
                             >
                                 {dayOfTheWeek}
                             </ThemedText>
                         )}
                         col={7}
-                        style={styles.weekDaysRow}
+                        style={[
+                            styles.weekDaysRow,
+                            { backgroundColor: backgroundColor, borderBottomColor: tabIconDefaultColor }
+                        ]}
                     />
                     {divideMonthIntoWeeks({ days, startDay }).map((week, i) => (
                         <Week
@@ -100,9 +116,6 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
 export default MonthViewScreen;
 
 const styles = StyleSheet.create({
-    currentMonth: {
-        color: Colors.dark.tint
-    },
     month: {
         paddingHorizontal: 0,
         paddingVertical: 12,
@@ -112,16 +125,12 @@ const styles = StyleSheet.create({
         fontSize: 26,
         fontWeight: 500
     },
-    selectedDay: {
-        color: Colors.dark.text
-    },
     weekDay: {
-        color: "gray",
         fontWeight: 600,
         fontSize: 12
     },
     weekDaysRow: {
-        backgroundColor: Colors.dark.background,
+        borderBottomWidth: 1,
         paddingTop: 8,
         paddingBottom: 4
     },

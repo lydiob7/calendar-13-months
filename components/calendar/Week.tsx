@@ -2,9 +2,9 @@ import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import Day from "./Day";
 import GridView from "../GridView";
-import { Colors } from "@/constants/Colors";
 import GregorianMonth from "@/types/GregorianMonth";
 import FixedCalendarMonth from "@/types/FixedCalendarMonth";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface WeekProps {
     days: (number | null)[];
@@ -14,6 +14,8 @@ interface WeekProps {
 }
 
 const Week: FC<WeekProps> = ({ days, isCurrentMonth, isSingleMonthScreen, monthKey }) => {
+    const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
+
     return (
         <GridView
             data={days}
@@ -23,11 +25,15 @@ const Week: FC<WeekProps> = ({ days, isCurrentMonth, isSingleMonthScreen, monthK
                     isCurrentMonth={isCurrentMonth}
                     isSingleMonthScreen={isSingleMonthScreen}
                     monthKey={monthKey}
-                    textStyle={isSingleMonthScreen && (i === 0 || i === 6) && styles.disabledText}
+                    textStyle={isSingleMonthScreen && (i === 0 || i === 6) && { color: tabIconDefaultColor }}
                 />
             )}
             col={7}
-            style={isSingleMonthScreen ? styles.weekRowSingleMonth : styles.weekRowYearScreen}
+            style={
+                isSingleMonthScreen
+                    ? [styles.weekRowSingleMonth, { borderBottomColor: tabIconDefaultColor }]
+                    : styles.weekRowYearScreen
+            }
         />
     );
 };
@@ -35,14 +41,10 @@ const Week: FC<WeekProps> = ({ days, isCurrentMonth, isSingleMonthScreen, monthK
 export default Week;
 
 const styles = StyleSheet.create({
-    disabledText: {
-        color: "gray"
-    },
     weekRowSingleMonth: {
-        borderBottomColor: Colors.dark.background,
-        borderWidth: 1,
-        paddingTop: 2,
-        paddingBottom: 8
+        borderBottomWidth: 1,
+        paddingTop: 4,
+        paddingBottom: 4
     },
     weekRowYearScreen: {}
 });

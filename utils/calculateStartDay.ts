@@ -28,7 +28,8 @@ export const monthsMap = {
     kattika: 10,
     magasira: 11,
     "capaq raymi": 12,
-    "day-out-of-time": 13
+    "day-out-of-time": 13,
+    "leap-day": 14
 };
 
 function calculateStartDay(month: GregorianMonth | FixedCalendarMonth, year: number) {

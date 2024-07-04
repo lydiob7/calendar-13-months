@@ -12,6 +12,7 @@ type FixedCalendarMonth =
     | "kattika"
     | "magasira"
     | "capaq raymi"
-    | "day-out-of-time";
+    | "day-out-of-time"
+    | "leap-day";
 
 export default FixedCalendarMonth;

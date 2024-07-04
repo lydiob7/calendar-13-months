@@ -1,3 +1,3 @@
-const daysOfTheWeek = ["SUN", "MON", "TUE", "WED", "THRU", "FRI", "SAT"];
+const daysOfTheWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"] as const;
 
 export default daysOfTheWeek;

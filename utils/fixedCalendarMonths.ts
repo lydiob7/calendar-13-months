@@ -7,6 +7,7 @@ const fixedCalendarMonths: FixedCalendarMonth[] = [
     "citta",
     "vesakha",
     "jettha",
+    "leap-day",
     "asalha",
     "savana",
     "potthapada",

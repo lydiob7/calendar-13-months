@@ -20,13 +20,24 @@ class CustomDate extends Date {
             const dayOfTheYear = this.dayOfTheYear();
             const isLeapYear = this.isLeapYear();
 
-            return dayOfTheYear % 28;
+            return isLeapYear && dayOfTheYear > 28 * 6 + 1 ? (dayOfTheYear % 28) - 1 : dayOfTheYear % 28;
         }
         return gregorianDate;
     }
 
+    getDateString(options?: MethodOptions) {
+        return `${this.getFullYear()}-${(this.getMonth(options) + 1).toString().padStart(2, "0")}-${this.getDate(
+            options
+        )
+            .toString()
+            .padStart(2, "0")}`;
+    }
+
     getDay(options?: MethodOptions) {
-        if (options?.type === "fixed") return this.date.getDay();
+        if (options?.type === "fixed") {
+            const dayOfTheYear = this.dayOfTheYear();
+            return ((dayOfTheYear % 28) % 7) - 1;
+        }
         return this.date.getDay();
     }
 
@@ -36,7 +47,8 @@ class CustomDate extends Date {
             const dayOfTheYear = this.dayOfTheYear();
             const isLeapYear = this.isLeapYear();
 
-            return Math.floor(dayOfTheYear / 28);
+            if (isLeapYear && dayOfTheYear === 28 * 6 + 1) return 14;
+            return Math.floor((isLeapYear && dayOfTheYear > 28 * 6 ? dayOfTheYear - 1 : dayOfTheYear) / 28);
         }
         return gregorianMonth;
     }

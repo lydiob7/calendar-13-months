@@ -1,10 +1,10 @@
 import React, { FC, useMemo } from "react";
 import { ThemedText } from "../ThemedText";
 import { Pressable, StyleProp, StyleSheet, TextStyle, View } from "react-native";
-import { Colors } from "@/constants/Colors";
 import { useCalendarContext } from "@/context/calendarContext";
 import GregorianMonth from "@/types/GregorianMonth";
 import FixedCalendarMonth from "@/types/FixedCalendarMonth";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface DayProps {
     day: number | null;
@@ -15,6 +15,10 @@ interface DayProps {
 }
 
 const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen, monthKey, textStyle }) => {
+    const backgroundColor = useThemeColor({}, "background");
+    const tabIconSelectedColor = useThemeColor({}, "tabIconSelected");
+    const textColor = useThemeColor({}, "text");
+
     const { currentYear, handleSelectDate, selectedDate, today, viewMode } = useCalendarContext();
 
     const isCurrentDay = useMemo(
@@ -36,8 +40,13 @@ const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen, monthKey,
         <View
             style={[
                 isCurrentDay && styles.currentDay,
-                isSingleMonthScreen && isSelected && styles.selectedDate,
-                ((isCurrentDay && isSelected) || (isCurrentDay && !isSingleMonthScreen)) && styles.currentDaySelected
+                isSingleMonthScreen && isSelected && [styles.selectedDate, { backgroundColor: textColor }],
+                ((isCurrentDay && isSelected) || (isCurrentDay && !isSingleMonthScreen)) && [
+                    styles.currentDaySelected,
+                    {
+                        backgroundColor: tabIconSelectedColor
+                    }
+                ]
             ]}
         >
             {isSingleMonthScreen ? (
@@ -57,8 +66,8 @@ const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen, monthKey,
                         style={[
                             styles.day,
                             textStyle,
-                            isCurrentDay && styles.currentDayText,
-                            isSelected && styles.selectedDateText,
+                            isCurrentDay && [styles.currentDayText, { color: tabIconSelectedColor }],
+                            isSelected && [styles.selectedDateText, { color: backgroundColor }],
                             isSelected && isCurrentDay && styles.selectedCurrentDateText,
                             styles.largeText
                         ]}
@@ -68,7 +77,12 @@ const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen, monthKey,
                 </Pressable>
             ) : (
                 <ThemedText
-                    style={[styles.day, textStyle, isCurrentDay && styles.selectedCurrentDateText, styles.smallText]}
+                    style={[
+                        styles.day,
+                        textStyle,
+                        isCurrentDay && [styles.selectedCurrentDateText, { color: backgroundColor }],
+                        styles.smallText
+                    ]}
                 >
                     {day}
                 </ThemedText>
@@ -82,13 +96,11 @@ export default Day;
 const styles = StyleSheet.create({
     currentDay: {},
     currentDaySelected: {
-        backgroundColor: Colors.dark.tint,
-        borderRadius: 999,
+        borderRadius: 4,
         padding: 0
     },
     currentDayText: {
-        fontWeight: 500,
-        color: Colors.dark.tint
+        fontWeight: 500
     },
     day: {
         textAlign: "center"
@@ -100,17 +112,14 @@ const styles = StyleSheet.create({
         minWidth: 30
     },
     selectedDate: {
-        backgroundColor: Colors.dark.text,
-        borderRadius: 999,
+        borderRadius: 4,
         padding: 0
     },
     selectedDateText: {
-        fontWeight: 500,
-        color: Colors.dark.background
+        fontWeight: 500
     },
     selectedCurrentDateText: {
-        fontWeight: 500,
-        color: Colors.dark.text
+        fontWeight: 500
     },
     smallText: {
         paddingHorizontal: 0,

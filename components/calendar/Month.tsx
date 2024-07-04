@@ -6,9 +6,9 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { CustomDate, divideMonthIntoWeeks, monthDaysMap, monthsMap } from "@/utils";
 import Week from "./Week";
 import DayOutOfTime from "./DayOutOfTime";
-import language from "@/config/languages";
 import { Colors } from "@/constants/Colors";
 import { useCalendarContext } from "@/context/calendarContext";
+import { useTranslationsContext } from "@/context/translationsContext";
 
 interface MonthProps {
     monthKey: GregorianMonth | FixedCalendarMonth;
@@ -16,6 +16,7 @@ interface MonthProps {
 }
 
 const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
+    const { language } = useTranslationsContext();
     const { currentYear, setCurrentMonth, setCurrentYear, today, viewMode } = useCalendarContext();
 
     const isCurrentYear = useMemo(
@@ -34,6 +35,9 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
         [currentYear, monthKey]
     );
 
+    const dayOutOfTime = useMemo(() => monthKey === "day-out-of-time", [monthKey]);
+    const leapDay = useMemo(() => monthKey === "leap-day", [monthKey]);
+
     return (
         <View style={styles.month}>
             <ThemedText
@@ -44,9 +48,9 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
             >
                 {language.months[monthKey]}
             </ThemedText>
-            {monthKey === "day-out-of-time" ? (
-                <DayOutOfTime />
-            ) : (
+            {dayOutOfTime && <DayOutOfTime monthKey="day-out-of-time" />}
+            {leapDay && <DayOutOfTime monthKey="leap-day" />}
+            {!leapDay && !dayOutOfTime && (
                 <Pressable
                     onPress={() => {
                         setCurrentYear(currentYear);

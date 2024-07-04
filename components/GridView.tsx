@@ -2,6 +2,7 @@ import React from "react";
 import { DimensionValue, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 
 type GridViewProps<T> = {
+    itemStyle?: StyleProp<ViewStyle> | ((item: T, index: number) => StyleProp<ViewStyle>);
     data: T[];
     renderView: (item: T, i: number) => JSX.Element;
     col?: number;
@@ -13,7 +14,13 @@ const GridView = <T extends any>(props: GridViewProps<T>) => {
     return (
         <View style={[styles().container, props.style]}>
             {data.map((item, i) => (
-                <View key={i} style={styles(col).item}>
+                <View
+                    key={i}
+                    style={[
+                        styles(col).item,
+                        typeof props.itemStyle === "function" ? props.itemStyle(item, i) : props.itemStyle
+                    ]}
+                >
                     {renderView(item, i)}
                 </View>
             ))}

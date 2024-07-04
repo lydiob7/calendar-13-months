@@ -5,6 +5,8 @@ export { default as CustomDate } from "./CustomDate";
 export { default as daysOfTheWeek } from "./daysOfTheWeek";
 export { default as divideMonthIntoWeeks } from "./divideMonthIntoWeeks";
 export { default as fixedCalendarMonths } from "./fixedCalendarMonths";
+export { default as getGregorianEquivalent } from "./getGregorianEquivalent";
 export { default as gregorianMonths } from "./gregorianMonths";
 export { default as isFixedCalendarMonth } from "./isFixedCalendarMonth";
+export { default as mapDatesIntoFixedCalendar } from "./mapDatesIntoFixedCalendar";
 export { default as monthDaysMap } from "./monthDaysMap";

@@ -2,15 +2,21 @@ import React, { FC, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { useCalendarContext } from "@/context/calendarContext";
-import { Colors } from "@/constants/Colors";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { fixedCalendarMonths, gregorianMonths } from "@/utils";
-import language from "@/config/languages";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import { useTranslationsContext } from "@/context/translationsContext";
 
 interface CalendarHeaderProps {}
 
 const CalendarHeader: FC<CalendarHeaderProps> = () => {
+    const { language } = useTranslationsContext();
+
+    const backgroundColor = useThemeColor({}, "background");
+    const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
+    const tabIconSelectedColor = useThemeColor({}, "tabIconSelected");
+    const textColor = useThemeColor({}, "text");
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const {
@@ -34,8 +40,8 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
         setIsDropdownOpen((prev) => !prev);
     };
 
-    const toggleCalendarMode = (mode: "gregorian" | "fixed") => {
-        setViewMode(mode);
+    const toggleCalendarMode = () => {
+        setViewMode((prev) => (prev === "fixed" ? "gregorian" : "fixed"));
     };
 
     const navigateToToday = () => {
@@ -59,12 +65,18 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                 ) : (
                     <Pressable onPress={toggleDropdown}>
                         <View style={styles.yearDropdown}>
-                            <ThemedText style={[styles.yearTitle, isCurrentYear && styles.currentYear]}>
+                            <ThemedText
+                                style={[
+                                    styles.yearTitle,
+                                    { color: textColor },
+                                    isCurrentYear && { color: tabIconSelectedColor }
+                                ]}
+                            >
                                 {currentYear}
                             </ThemedText>
                             <Ionicons
                                 name="chevron-down-outline"
-                                color={isCurrentYear ? Colors.dark.tint : "white"}
+                                color={isCurrentYear ? tabIconSelectedColor : textColor}
                                 size={20}
                                 style={isDropdownOpen && styles.rotateIcon}
                             />
@@ -76,7 +88,7 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                         <Pressable onPress={toggleDropdown}>
                             <View style={styles.modalBackdrop} />
                         </Pressable>
-                        <View style={styles.modalWrapper}>
+                        <View style={[styles.modalWrapper, { backgroundColor: backgroundColor }]}>
                             <Picker
                                 selectedValue={currentYear}
                                 onValueChange={(itemValue, itemIndex) => setCurrentYear(itemValue)}
@@ -86,7 +98,7 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                                         key={year}
                                         label={year.toString()}
                                         value={year}
-                                        color={currentYear === year ? Colors.dark.tint : "#fff"}
+                                        color={currentYear === year ? tabIconSelectedColor : textColor}
                                         style={styles.yearTitle}
                                     />
                                 ))}
@@ -96,32 +108,33 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                 )}
 
                 <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+                    {!currentMonth && (
+                        <Pressable
+                            onPress={() => {
+                                toggleCalendarMode();
+                                setCurrentMonth(null);
+                            }}
+                        >
+                            <MaterialCommunityIcons name="cached" size={26} color={tabIconDefaultColor} />
+                        </Pressable>
+                    )}
                     <Pressable
                         onPress={() => {
-                            toggleCalendarMode("fixed");
                             setCurrentMonth(null);
                         }}
                     >
                         <MaterialCommunityIcons
                             name="calendar-month-outline"
                             size={26}
-                            color={!currentMonth && viewMode === "fixed" ? Colors.dark.tint : "white"}
-                        />
-                    </Pressable>
-                    <Pressable
-                        onPress={() => {
-                            toggleCalendarMode("gregorian");
-                            setCurrentMonth(null);
-                        }}
-                    >
-                        <MaterialCommunityIcons
-                            name="web"
-                            size={26}
-                            color={!currentMonth && viewMode === "gregorian" ? Colors.dark.tint : "white"}
+                            color={!currentMonth ? tabIconSelectedColor : tabIconDefaultColor}
                         />
                     </Pressable>
                     <Pressable onPress={navigateToToday}>
-                        <MaterialCommunityIcons name="calendar-today" size={26} color="white" />
+                        <MaterialCommunityIcons
+                            name="calendar-today"
+                            size={26}
+                            color={currentMonth ? tabIconSelectedColor : tabIconDefaultColor}
+                        />
                     </Pressable>
                 </View>
             </View>
@@ -141,9 +154,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between"
     },
-    currentYear: {
-        color: Colors.dark.tint
-    },
     dropdownIcon: {},
     pickerItem: {},
     rotateIcon: {
@@ -160,7 +170,6 @@ const styles = StyleSheet.create({
     },
     modalWrapper: {
         position: "relative",
-        backgroundColor: Colors.dark.background,
         width: 250,
         top: 48,
         zIndex: 4
@@ -175,7 +184,6 @@ const styles = StyleSheet.create({
         zIndex: 3
     },
     yearTitle: {
-        color: "#ffffff",
         fontSize: 20,
         fontWeight: 500,
         lineHeight: 32,

@@ -7,6 +7,7 @@ import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import CalendarContextProvider from "@/context/calendarContext";
+import TranslationsContextProvider from "@/context/translationsContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -29,11 +30,13 @@ export default function RootLayout() {
 
     return (
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-            <CalendarContextProvider>
-                <Stack>
-                    <Stack.Screen name="index" options={{ title: "Year view", headerShown: false }} />
-                </Stack>
-            </CalendarContextProvider>
+            <TranslationsContextProvider>
+                <CalendarContextProvider>
+                    <Stack>
+                        <Stack.Screen name="index" options={{ title: "Year view", headerShown: false }} />
+                    </Stack>
+                </CalendarContextProvider>
+            </TranslationsContextProvider>
         </ThemeProvider>
     );
 }
