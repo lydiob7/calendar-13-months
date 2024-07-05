@@ -2,18 +2,31 @@
     "common": {
         "allDayTitle": "All day",
         "eventsTitle": "Events",
+        "fromTitle": "From",
         "monthTitle": "Month",
         "noEventsTitle": "No events",
+        "toTitle": "To",
         "yearTitle": "Year"
     },
     "daysOfTheWeek": {
-        "sunday": "SUN",
-        "monday": "MON",
-        "tuesday": "TUE",
-        "wednesday": "WED",
-        "thursday": "THU",
-        "friday": "FRI",
-        "saturday": "SAT"
+        "full": {
+            "sunday": "Sunday",
+            "monday": "Monday",
+            "tuesday": "Tuesday",
+            "wednesday": "Wednesday",
+            "thursday": "Thursday",
+            "friday": "Friday",
+            "saturday": "Saturday"
+        },
+        "short": {
+            "sunday": "SUN",
+            "monday": "MON",
+            "tuesday": "TUE",
+            "wednesday": "WED",
+            "thursday": "THU",
+            "friday": "FRI",
+            "saturday": "SAT"
+        }
     },
     "languages": {
         "en": "English",

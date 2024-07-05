@@ -2,18 +2,31 @@
     "common": {
         "allDayTitle": "Todo el día",
         "eventsTitle": "Eventos",
+        "fromTitle": "Desde",
         "monthTitle": "Mes",
         "noEventsTitle": "No events",
+        "toTitle": "Hasta",
         "yearTitle": "Año"
     },
     "daysOfTheWeek": {
-        "sunday": "DOM",
-        "monday": "LUN",
-        "tuesday": "MAR",
-        "wednesday": "MIE",
-        "thursday": "JUE",
-        "friday": "VIE",
-        "saturday": "SAB"
+        "full": {
+            "sunday": "Domingo",
+            "monday": "Lunes",
+            "tuesday": "Martes",
+            "wednesday": "Miércoles",
+            "thursday": "Jueves",
+            "friday": "Viernes",
+            "saturday": "Sábado"
+        },
+        "short": {
+            "sunday": "DOM",
+            "monday": "LUN",
+            "tuesday": "MAR",
+            "wednesday": "MIE",
+            "thursday": "JUE",
+            "friday": "VIE",
+            "saturday": "SAB"
+        }
     },
     "languages": {
         "en": "Inglés",

@@ -1,6 +1,7 @@
 import { isAfter } from "date-fns";
 import { fixedCalendarMonthsMap } from "./fixedCalendarMonths";
 import gregorianMonths from "./gregorianMonths";
+import daysOfTheWeek from "./daysOfTheWeek";
 
 interface CustomDateOptions {
     withoutTime?: boolean;
@@ -97,6 +98,14 @@ class CustomDate extends Date {
     isLeapYear() {
         const year = this.getFullYear();
         return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    }
+
+    toString(options?: MethodOptions) {
+        const dayOfTheWeek = this.getDay(options);
+        const date = this.getDate(options).toString().padStart(2, "0");
+        const month = this.getMonthString(options);
+        const year = this.getFullYear();
+        return `${daysOfTheWeek[dayOfTheWeek]} ${month} ${date} ${year}`;
     }
 }
 

@@ -92,7 +92,7 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
             {!dayOutOfTime && !leapDay && (
                 <View style={styles.weeksWrapper}>
                     <GridView
-                        data={daysOfTheWeek.map((d) => language?.daysOfTheWeek?.[d])}
+                        data={daysOfTheWeek.map((d) => language?.daysOfTheWeek?.short?.[d])}
                         renderView={(dayOfTheWeek: string) => (
                             <ThemedText
                                 style={[
