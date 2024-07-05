@@ -17,7 +17,8 @@ interface MonthProps {
 
 const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
     const { language } = useTranslationsContext();
-    const { currentYear, setCurrentMonth, setCurrentYear, today, viewMode } = useCalendarContext();
+    const { currentYear, handleSelectFirstDayOfTheMonth, setCurrentMonth, setCurrentYear, today, viewMode } =
+        useCalendarContext();
 
     const isCurrentYear = useMemo(
         () => today.getFullYear().toString() === currentYear.toString(),
@@ -56,6 +57,7 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
                     onPress={() => {
                         setCurrentYear(currentYear);
                         setCurrentMonth(monthKey);
+                        handleSelectFirstDayOfTheMonth(monthKey, currentYear);
                     }}
                 >
                     <View style={styles.weeksWrapper}>

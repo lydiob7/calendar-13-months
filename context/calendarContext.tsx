@@ -1,18 +1,8 @@
 import FixedCalendarMonth from "@/types/FixedCalendarMonth";
 import GregorianMonth from "@/types/GregorianMonth";
 import SelectedDate from "@/types/SelectedDate";
-import { CustomDate, fixedCalendarMonthsMap, gregorianMonths } from "@/utils";
-import {
-    Dispatch,
-    ReactNode,
-    SetStateAction,
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useState
-} from "react";
+import { CustomDate } from "@/utils";
+import { Dispatch, ReactNode, SetStateAction, createContext, useCallback, useContext, useMemo, useState } from "react";
 
 type ViewMode = "gregorian" | "fixed";
 
@@ -20,12 +10,11 @@ interface CalendarContextProps {
     currentMonth: GregorianMonth | FixedCalendarMonth | null;
     currentYear: number;
     handleSelectDate: (selectedDate: SelectedDate) => void;
+    handleSelectFirstDayOfTheMonth: (month: GregorianMonth | FixedCalendarMonth, year: number) => void;
     handleSelectToday: () => void;
-    preventAutomaticDaySelect: boolean;
     selectedDate: SelectedDate | null;
     setCurrentMonth: Dispatch<SetStateAction<GregorianMonth | FixedCalendarMonth | null>>;
     setCurrentYear: Dispatch<SetStateAction<number>>;
-    setPreventAutomaticDaySelect: Dispatch<SetStateAction<boolean>>;
     setViewMode: Dispatch<SetStateAction<ViewMode>>;
     today: CustomDate;
     viewMode: ViewMode;
@@ -38,14 +27,16 @@ const today = new CustomDate();
 const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
     const [currentMonth, setCurrentMonth] = useState<GregorianMonth | FixedCalendarMonth | null>(null);
     const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
-    const [preventAutomaticDaySelect, setPreventAutomaticDaySelect] = useState<boolean>(false);
     const [selectedDate, setSelectedDate] = useState<SelectedDate | null>(null);
     const [viewMode, setViewMode] = useState<ViewMode>("fixed");
 
     const handleSelectDate = useCallback((selectedDate: SelectedDate) => {
-        const { date, month, year } = selectedDate;
+        setSelectedDate(selectedDate);
+    }, []);
+
+    const handleSelectFirstDayOfTheMonth = useCallback((month: GregorianMonth | FixedCalendarMonth, year: number) => {
         setSelectedDate({
-            date,
+            date: 1,
             month,
             year
         });
@@ -58,30 +49,19 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
             month: today.getMonthString({ type: viewMode }),
             year: today.getFullYear()
         });
-        setPreventAutomaticDaySelect(true);
         setCurrentMonth(today.getMonthString({ type: viewMode }));
     }, [handleSelectDate, viewMode]);
-
-    useEffect(() => {
-        if (!selectedDate) handleSelectToday();
-    }, [handleSelectToday, selectedDate]);
-
-    useEffect(() => {
-        if (selectedDate?.month !== currentMonth && selectedDate?.date !== currentYear)
-            setPreventAutomaticDaySelect(false);
-    }, [currentMonth, currentYear]);
 
     const values = useMemo(
         () => ({
             currentMonth,
             currentYear,
             handleSelectDate,
+            handleSelectFirstDayOfTheMonth,
             handleSelectToday,
-            preventAutomaticDaySelect,
             selectedDate,
             setCurrentMonth,
             setCurrentYear,
-            setPreventAutomaticDaySelect,
             today,
             viewMode,
             setViewMode
@@ -90,12 +70,11 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
             currentMonth,
             currentYear,
             handleSelectDate,
+            handleSelectFirstDayOfTheMonth,
             handleSelectToday,
-            preventAutomaticDaySelect,
             selectedDate,
             setCurrentMonth,
             setCurrentYear,
-            setPreventAutomaticDaySelect,
             viewMode,
             setViewMode
         ]

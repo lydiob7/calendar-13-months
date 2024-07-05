@@ -16,3 +16,4 @@ export { default as gregorianMonths } from "./gregorianMonths";
 export { default as isFixedCalendarMonth } from "./isFixedCalendarMonth";
 export { default as mapDatesIntoFixedCalendar } from "./mapDatesIntoFixedCalendar";
 export { default as monthDaysMap } from "./monthDaysMap";
+export { default as toggleCurrentMonthViewMode } from "./toggleCurrentMonthViewMode";

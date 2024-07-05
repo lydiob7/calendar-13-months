@@ -6,7 +6,8 @@ function customDateFromDateObject(date: SelectedDate) {
     return new CustomDate(
         `${date.year}-${(monthsMap[date.month] + 1).toString().padStart(2, "0")}-${date.date
             .toString()
-            .padStart(2, "0")}`
+            .padStart(2, "0")}`,
+        { withoutTime: true }
     );
 }
 

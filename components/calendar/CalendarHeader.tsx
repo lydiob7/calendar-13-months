@@ -4,7 +4,7 @@ import { ThemedText } from "../ThemedText";
 import { useCalendarContext } from "@/context/calendarContext";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { calculateNextMonth, calculatePreviousMonth } from "@/utils";
+import { calculateNextMonth, calculatePreviousMonth, toggleCurrentMonthViewMode } from "@/utils";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslationsContext } from "@/context/translationsContext";
 
@@ -22,13 +22,14 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
     const {
         currentMonth,
         currentYear,
+        handleSelectDate,
+        handleSelectFirstDayOfTheMonth,
         handleSelectToday,
+        selectedDate,
         setCurrentMonth,
         setCurrentYear,
-        setPreventAutomaticDaySelect,
         setViewMode,
-        today,
-        viewMode
+        today
     } = useCalendarContext();
 
     const isCurrentYear = useMemo(
@@ -40,27 +41,31 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
         setIsDropdownOpen((prev) => !prev);
     };
 
-    const toggleCalendarMode = () => {
+    const toggleCalendarMode = useCallback(() => {
+        if (currentMonth && selectedDate) {
+            const newSelectedDate = toggleCurrentMonthViewMode(selectedDate);
+            setCurrentYear(newSelectedDate.year);
+            setCurrentMonth(newSelectedDate.month);
+            handleSelectDate(newSelectedDate);
+        }
         setViewMode((prev) => (prev === "fixed" ? "gregorian" : "fixed"));
-    };
-
-    const navigateToToday = useCallback(() => {
-        handleSelectToday();
-    }, [handleSelectToday]);
+    }, [currentMonth, handleSelectDate, selectedDate]);
 
     const handleGoToPreviousMonth = useCallback(() => {
         if (!currentMonth) return;
         const { month, year } = calculatePreviousMonth({ currentMonth, currentYear });
         setCurrentYear(year);
         setCurrentMonth(month);
-    }, [currentMonth, currentYear]);
+        handleSelectFirstDayOfTheMonth(month, year);
+    }, [currentMonth, currentYear, handleSelectFirstDayOfTheMonth]);
 
     const handleGoToNextMonth = useCallback(() => {
         if (!currentMonth) return;
         const { month, year } = calculateNextMonth({ currentMonth, currentYear });
         setCurrentYear(year);
         setCurrentMonth(month);
-    }, [currentMonth, currentYear]);
+        handleSelectFirstDayOfTheMonth(month, year);
+    }, [currentMonth, currentYear, handleSelectFirstDayOfTheMonth]);
 
     return (
         <>
@@ -123,16 +128,9 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                 )}
 
                 <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-                    {!currentMonth && (
-                        <Pressable
-                            onPress={() => {
-                                toggleCalendarMode();
-                                setCurrentMonth(null);
-                            }}
-                        >
-                            <MaterialCommunityIcons name="cached" size={26} color={tabIconDefaultColor} />
-                        </Pressable>
-                    )}
+                    <Pressable onPress={toggleCalendarMode}>
+                        <MaterialCommunityIcons name="cached" size={26} color={tabIconDefaultColor} />
+                    </Pressable>
                     <Pressable
                         onPress={() => {
                             setCurrentMonth(null);
@@ -144,7 +142,7 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                             color={!currentMonth ? tabIconSelectedColor : tabIconDefaultColor}
                         />
                     </Pressable>
-                    <Pressable onPress={navigateToToday}>
+                    <Pressable onPress={handleSelectToday}>
                         <MaterialCommunityIcons
                             name="calendar-today"
                             size={26}

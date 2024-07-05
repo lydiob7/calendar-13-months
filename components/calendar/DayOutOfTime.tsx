@@ -9,7 +9,7 @@ interface DayOutOfTimeProps {
 }
 
 const DayOutOfTime: FC<DayOutOfTimeProps> = ({ monthKey, isSingleMonthScreen }) => {
-    const { currentYear, setCurrentMonth, setCurrentYear } = useCalendarContext();
+    const { currentYear, handleSelectFirstDayOfTheMonth, setCurrentMonth, setCurrentYear } = useCalendarContext();
 
     return (
         <View style={styles.day}>
@@ -20,6 +20,7 @@ const DayOutOfTime: FC<DayOutOfTimeProps> = ({ monthKey, isSingleMonthScreen }) 
                     onPress={() => {
                         setCurrentYear(currentYear);
                         setCurrentMonth(monthKey || DAY_OUT_OF_TIME_KEY);
+                        handleSelectFirstDayOfTheMonth(monthKey || DAY_OUT_OF_TIME_KEY, currentYear);
                     }}
                 >
                     <Image source={require("@/assets/images/day-out-of-time.png")} style={styles.image} />

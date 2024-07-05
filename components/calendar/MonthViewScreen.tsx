@@ -32,8 +32,7 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
 
     const [dayEvents, setDayEvents] = useState<string[]>([]);
 
-    const { currentMonth, currentYear, handleSelectDate, preventAutomaticDaySelect, selectedDate, today, viewMode } =
-        useCalendarContext();
+    const { currentMonth, currentYear, selectedDate, today, viewMode } = useCalendarContext();
 
     const isCurrentYear = useMemo(
         () => today.getFullYear()?.toString() === currentYear?.toString(),
@@ -63,15 +62,6 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
         () => calculateDayOfTheWeek({ selectedDate, days, startDay }),
         [selectedDate, viewMode]
     );
-
-    useEffect(() => {
-        if (currentMonth && !preventAutomaticDaySelect)
-            handleSelectDate({
-                date: 1,
-                month: currentMonth,
-                year: currentYear
-            });
-    }, [currentMonth, currentYear, preventAutomaticDaySelect]);
 
     useEffect(() => {
         if (currentMonth)
