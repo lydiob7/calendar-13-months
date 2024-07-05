@@ -8,13 +8,14 @@ import { useThemeColor } from "@/hooks/useThemeColor";
 
 interface DayProps {
     day: number | null;
+    hasEvents?: boolean;
     isCurrentMonth: boolean;
     isSingleMonthScreen?: boolean;
     monthKey: GregorianMonth | FixedCalendarMonth;
     textStyle?: StyleProp<TextStyle>;
 }
 
-const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen, monthKey, textStyle }) => {
+const Day: FC<DayProps> = ({ day, hasEvents, isCurrentMonth, isSingleMonthScreen, monthKey, textStyle }) => {
     const backgroundColor = useThemeColor({}, "background");
     const tabIconSelectedColor = useThemeColor({}, "tabIconSelected");
     const textColor = useThemeColor({}, "text");
@@ -61,6 +62,7 @@ const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen, monthKey,
                                   })
                             : undefined
                     }
+                    style={{ flexDirection: "column", alignItems: "center" }}
                 >
                     <ThemedText
                         style={[
@@ -74,6 +76,16 @@ const Day: FC<DayProps> = ({ day, isCurrentMonth, isSingleMonthScreen, monthKey,
                     >
                         {day}
                     </ThemedText>
+                    {hasEvents && (
+                        <View
+                            style={[
+                                styles.eventsMarker,
+                                { backgroundColor: textColor },
+                                isCurrentDay && { backgroundColor: tabIconSelectedColor },
+                                isSelected && { backgroundColor: backgroundColor }
+                            ]}
+                        />
+                    )}
                 </Pressable>
             ) : (
                 <ThemedText
@@ -104,6 +116,13 @@ const styles = StyleSheet.create({
     },
     day: {
         textAlign: "center"
+    },
+    eventsMarker: {
+        width: 6,
+        height: 6,
+        borderRadius: 999,
+        marginBottom: 4,
+        marginLeft: 1
     },
     largeText: {
         padding: 4,

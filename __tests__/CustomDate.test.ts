@@ -12,6 +12,11 @@ describe("CustomDate class functionality for gregorian date", () => {
         expect(new CustomDate("2000-06-12", { withoutTime: true }).getMonth()).toBe(5);
         expect(new CustomDate("2024-12-30", { withoutTime: true }).getMonth()).toBe(11);
     });
+    it("getMonthString() returns correct month for gregorian date", () => {
+        expect(new CustomDate("1991-04-09", { withoutTime: true }).getMonthString()).toBe("april");
+        expect(new CustomDate("2000-06-12", { withoutTime: true }).getMonthString()).toBe("june");
+        expect(new CustomDate("2024-12-30", { withoutTime: true }).getMonthString()).toBe("december");
+    });
     it("getDate() returns correct date for gregorian date", () => {
         expect(new CustomDate("1991-04-09", { withoutTime: true }).getDate()).toBe(9);
     });
@@ -91,7 +96,7 @@ describe("CustomDate class functionality for gregorian date", () => {
 });
 
 describe("CustomDate class functionality for fixed calendar date", () => {
-    it("Returns correct month for fixed calendar date on a non leap year", () => {
+    it("getMonth() returns correct month for fixed calendar date on a non leap year", () => {
         expect(new CustomDate("1991-01-01", { withoutTime: true }).getMonth({ type: "fixed" })).toBe(0);
         expect(new CustomDate("1991-01-28", { withoutTime: true }).getMonth({ type: "fixed" })).toBe(0);
         expect(new CustomDate("1991-01-29", { withoutTime: true }).getMonth({ type: "fixed" })).toBe(1);
@@ -116,6 +121,38 @@ describe("CustomDate class functionality for fixed calendar date", () => {
         expect(new CustomDate("2024-12-30T05:00:00").getMonth({ type: "fixed" })).toBe(12);
         //============ DAY OUT OF TIME vv ============//
         expect(new CustomDate("2008-12-31", { withoutTime: true }).getMonth({ type: "fixed" })).toBe(13);
+    });
+    it("getMonthString() returns correct month string for fixed calendar date on a non leap year", () => {
+        expect(new CustomDate("1991-01-01", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("phussa");
+        expect(new CustomDate("1991-01-28", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("phussa");
+        expect(new CustomDate("1991-01-29", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("magha");
+        expect(new CustomDate("1991-04-09", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("citta");
+        expect(new CustomDate("1975-12-30", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe(
+            "capaq-raymi"
+        );
+        //============ DAY OUT OF TIME vv ============//
+        expect(new CustomDate("1989-12-31", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe(
+            "day-out-of-time"
+        );
+    });
+    it("getMonthString() returns correct month string for fixed calendar date on a leap year", () => {
+        expect(new CustomDate("2004-01-01", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("phussa");
+        expect(new CustomDate("2024-01-02T08:00:00").getMonthString({ type: "fixed" })).toBe("phussa");
+        expect(new CustomDate("2004-01-28", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("phussa");
+        expect(new CustomDate("2004-01-29", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("magha");
+        expect(new CustomDate("1996-02-29", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("phagguna");
+        expect(new CustomDate("2024-06-16T05:00:00").getMonthString({ type: "fixed" })).toBe("jettha");
+        //============ LEAP DAY vv ============//
+        expect(new CustomDate("2004-06-17", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("leap-day");
+        expect(new CustomDate("1992-06-20", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe("asalha");
+        expect(new CustomDate("2024-09-25T05:00:00").getMonthString({ type: "fixed" })).toBe("assayuja");
+        expect(new CustomDate("2024-10-18T05:00:00").getMonthString({ type: "fixed" })).toBe("kattika");
+        expect(new CustomDate("2024-10-23T05:00:00").getMonthString({ type: "fixed" })).toBe("kattika");
+        expect(new CustomDate("2024-12-30T05:00:00").getMonthString({ type: "fixed" })).toBe("capaq-raymi");
+        //============ DAY OUT OF TIME vv ============//
+        expect(new CustomDate("2008-12-31", { withoutTime: true }).getMonthString({ type: "fixed" })).toBe(
+            "day-out-of-time"
+        );
     });
     it("getDate() returns correct date for fixed calendar date on a non leap year", () => {
         expect(new CustomDate("1989-04-09", { withoutTime: true }).getDate({ type: "fixed" })).toBe(15);

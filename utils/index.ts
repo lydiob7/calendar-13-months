@@ -1,4 +1,6 @@
 export { default as calculateDayOfTheWeek } from "./calculateDayOfTheWeek";
+export { default as calculateNextMonth } from "./calculateNextMonth";
+export { default as calculatePreviousMonth } from "./calculatePreviousMonth";
 export { default as calculateStartDay } from "./calculateStartDay";
 export { monthsMap } from "./calculateStartDay";
 export * from "./constants";
@@ -8,6 +10,7 @@ export { default as daysOfTheWeek } from "./daysOfTheWeek";
 export { default as divideMonthIntoWeeks } from "./divideMonthIntoWeeks";
 export { default as fixedCalendarMonths } from "./fixedCalendarMonths";
 export * from "./fixedCalendarMonths";
+export { default as getAllDateStringsForDatesRange } from "./getAllDateStringsForDatesRange";
 export { default as getGregorianEquivalent } from "./getGregorianEquivalent";
 export { default as gregorianMonths } from "./gregorianMonths";
 export { default as isFixedCalendarMonth } from "./isFixedCalendarMonth";

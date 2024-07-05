@@ -1,4 +1,6 @@
 import { isAfter } from "date-fns";
+import { fixedCalendarMonthsMap } from "./fixedCalendarMonths";
+import gregorianMonths from "./gregorianMonths";
 
 interface CustomDateOptions {
     withoutTime?: boolean;
@@ -69,6 +71,11 @@ class CustomDate extends Date {
                 : Math.floor((dayOfTheYear - 2) / 28);
         }
         return gregorianMonth;
+    }
+
+    getMonthString(options?: MethodOptions) {
+        const month = this.getMonth(options);
+        return options?.type === "fixed" ? fixedCalendarMonthsMap[month] : gregorianMonths[month];
     }
 
     getFullYear() {

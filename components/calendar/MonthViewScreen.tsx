@@ -11,7 +11,7 @@ import {
     monthDaysMap,
     monthsMap
 } from "@/utils";
-import React, { FC, useEffect, useMemo } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import DayOutOfTime from "./DayOutOfTime";
 import Week from "./Week";
@@ -19,6 +19,7 @@ import GridView from "../GridView";
 import EventsList from "./EventsList";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslationsContext } from "@/context/translationsContext";
+import mainApiService from "@/services/mainApiService";
 
 interface MonthViewScreenProps {}
 
@@ -28,6 +29,8 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
     const backgroundColor = useThemeColor({}, "background");
     const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
     const textColor = useThemeColor({}, "text");
+
+    const [dayEvents, setDayEvents] = useState<string[]>([]);
 
     const { currentMonth, currentYear, handleSelectDate, preventAutomaticDaySelect, selectedDate, today, viewMode } =
         useCalendarContext();
@@ -70,6 +73,24 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
             });
     }, [currentMonth, currentYear, preventAutomaticDaySelect]);
 
+    useEffect(() => {
+        if (currentMonth)
+            mainApiService
+                .getRangeEvents({
+                    startDate: {
+                        date: 1,
+                        month: currentMonth,
+                        year: currentYear
+                    },
+                    endDate: {
+                        date: days,
+                        month: currentMonth,
+                        year: currentYear
+                    }
+                })
+                .then((response) => setDayEvents(response));
+    }, [currentMonth, currentYear, days]);
+
     const dayOutOfTime = useMemo(() => currentMonth === DAY_OUT_OF_TIME_KEY, [currentMonth]);
     const leapDay = useMemo(() => currentMonth === LEAP_DAY_KEY, [currentMonth]);
 
@@ -101,6 +122,7 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
                     />
                     {divideMonthIntoWeeks({ days, startDay }).map((week, i) => (
                         <Week
+                            dayEvents={dayEvents}
                             days={week}
                             isCurrentMonth={isCurrentMonth}
                             key={i}
@@ -110,7 +132,6 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
                     ))}
                 </View>
             )}
-
             <EventsList />
         </View>
     );

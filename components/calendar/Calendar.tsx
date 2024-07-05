@@ -1,16 +1,8 @@
 import React from "react";
 import Year from "./Year";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useFocusEffect } from "expo-router";
-import { useCalendarContext } from "@/context/calendarContext";
 
 const Calendar = () => {
-    const { setPreventAutomaticDaySelect } = useCalendarContext();
-
-    useFocusEffect(() => {
-        setPreventAutomaticDaySelect(false);
-    });
-
     return (
         <View style={styles.viewWrapper}>
             <ScrollView style={styles.container}>

@@ -52,19 +52,24 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const handleSelectToday = useCallback(() => {
+        setCurrentYear(today.getFullYear());
         handleSelectDate({
             date: today.getDate({ type: viewMode }),
-            month:
-                viewMode === "gregorian"
-                    ? gregorianMonths[today.getMonth({ type: viewMode })]
-                    : fixedCalendarMonthsMap[today.getMonth({ type: viewMode })],
+            month: today.getMonthString({ type: viewMode }),
             year: today.getFullYear()
         });
+        setPreventAutomaticDaySelect(true);
+        setCurrentMonth(today.getMonthString({ type: viewMode }));
     }, [handleSelectDate, viewMode]);
 
     useEffect(() => {
         if (!selectedDate) handleSelectToday();
     }, [handleSelectToday, selectedDate]);
+
+    useEffect(() => {
+        if (selectedDate?.month !== currentMonth && selectedDate?.date !== currentYear)
+            setPreventAutomaticDaySelect(false);
+    }, [currentMonth, currentYear]);
 
     const values = useMemo(
         () => ({

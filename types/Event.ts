@@ -2,26 +2,42 @@ type EventAlert = "event-time" | "5min" | "10min" | "15min" | "30min" | "1h" | "
 type TravelTime = "5min" | "10min" | "15min" | "30min" | "1h" | "1h30min" | "2h";
 type EventRepeat = "day" | "week" | "2weeks" | "month" | "year";
 
-interface Event {
+interface BaseEvent {
     alert?: EventAlert;
     id: string;
-    location?: string;
-    notes?: string;
-    repeat?: EventRepeat;
     schedule: {
         allDay: boolean;
         ends: {
             date: string;
-            hour?: string;
+            time?: string;
         };
         starts: {
             date: string;
-            hour?: string;
+            time?: string;
         };
-        travelTime?: TravelTime;
     };
     title: string;
+}
+
+interface CustomEvent extends BaseEvent {
+    type: "custom";
+    location?: string;
+    notes?: string;
+    repeat?: EventRepeat;
+    schedule: BaseEvent["schedule"] & {
+        travelTime?: TravelTime;
+    };
     url?: string;
 }
+
+interface MoonPhaseEvent extends BaseEvent {
+    type: "moon-phase";
+}
+
+interface AstrologicalEvent extends BaseEvent {
+    type: "astrological-event";
+}
+
+type Event = CustomEvent | MoonPhaseEvent | AstrologicalEvent;
 
 export default Event;

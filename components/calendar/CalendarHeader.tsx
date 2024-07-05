@@ -1,10 +1,10 @@
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { useCalendarContext } from "@/context/calendarContext";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { fixedCalendarMonthsMap, gregorianMonths } from "@/utils";
+import { calculateNextMonth, calculatePreviousMonth } from "@/utils";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslationsContext } from "@/context/translationsContext";
 
@@ -44,24 +44,39 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
         setViewMode((prev) => (prev === "fixed" ? "gregorian" : "fixed"));
     };
 
-    const navigateToToday = () => {
-        setCurrentYear(today.getFullYear());
-        setCurrentMonth(
-            viewMode === "gregorian"
-                ? gregorianMonths[today.getMonth({ type: viewMode })]
-                : fixedCalendarMonthsMap[today.getMonth({ type: viewMode })]
-        );
-        setPreventAutomaticDaySelect(true);
+    const navigateToToday = useCallback(() => {
         handleSelectToday();
-    };
+    }, [handleSelectToday]);
+
+    const handleGoToPreviousMonth = useCallback(() => {
+        if (!currentMonth) return;
+        const { month, year } = calculatePreviousMonth({ currentMonth, currentYear });
+        setCurrentYear(year);
+        setCurrentMonth(month);
+    }, [currentMonth, currentYear]);
+
+    const handleGoToNextMonth = useCallback(() => {
+        if (!currentMonth) return;
+        const { month, year } = calculateNextMonth({ currentMonth, currentYear });
+        setCurrentYear(year);
+        setCurrentMonth(month);
+    }, [currentMonth, currentYear]);
 
     return (
         <>
             <View style={styles.container}>
                 {currentMonth ? (
-                    <ThemedText>
-                        {language.months[currentMonth]} {currentYear}
-                    </ThemedText>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                        <Pressable onPress={handleGoToPreviousMonth}>
+                            <Ionicons name="chevron-back-outline" size={20} />
+                        </Pressable>
+                        <ThemedText style={{ minWidth: 153, textAlign: "center" }}>
+                            {language.months[currentMonth]} {currentYear}
+                        </ThemedText>
+                        <Pressable onPress={handleGoToNextMonth}>
+                            <Ionicons name="chevron-forward-outline" size={20} />
+                        </Pressable>
+                    </View>
                 ) : (
                     <Pressable onPress={toggleDropdown}>
                         <View style={styles.yearDropdown}>

@@ -1,5 +1,6 @@
 {
     "common": {
+        "allDayTitle": "All day",
         "eventsTitle": "Events",
         "monthTitle": "Month",
         "noEventsTitle": "No events",

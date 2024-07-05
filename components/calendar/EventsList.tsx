@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { useTranslationsContext } from "@/context/translationsContext";
