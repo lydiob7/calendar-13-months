@@ -40,7 +40,11 @@ const EventItem: FC<Event> = (calendarEvent) => {
                 <View style={[styles.container, { backgroundColor: themeBackground }]}>
                     <View style={[styles.leftSide, { borderLeftColor: tintColor }]}>
                         <ThemedText numberOfLines={1} style={[styles.title, { maxWidth: 250 }]}>
-                            {title}
+                            {calendarEvent.type === "moon-phase"
+                                ? `${calendarEvent.phaseEmoji} ${
+                                      language.moonPhases?.[title as keyof typeof language.moonPhases]
+                                  }`
+                                : title}
                         </ThemedText>
                         {calendarEvent.type === "custom" && calendarEvent.location && (
                             <ThemedText
@@ -53,14 +57,20 @@ const EventItem: FC<Event> = (calendarEvent) => {
                     </View>
                     <View style={styles.rightSide}>
                         {schedule.allDay || (isMultipleDaysEvent && !isStartDay && !isEndDay) ? (
-                            <ThemedText style={styles.secondaryText}>{language.common.allDayTitle}</ThemedText>
+                            <ThemedText style={[styles.secondaryText, styles.timeText]}>
+                                {language.common.allDayTitle}
+                            </ThemedText>
                         ) : (
                             <>
                                 {(!isMultipleDaysEvent || isStartDay) && (
-                                    <ThemedText style={styles.secondaryText}>{schedule.starts?.time}</ThemedText>
+                                    <ThemedText style={[styles.secondaryText, styles.timeText]}>
+                                        {schedule.starts?.time}
+                                    </ThemedText>
                                 )}
-                                {(!isMultipleDaysEvent || isEndDay) && (
-                                    <ThemedText style={[styles.secondaryText, { color: disabledText }]}>
+                                {(!isMultipleDaysEvent || isEndDay) && calendarEvent.type !== "moon-phase" && (
+                                    <ThemedText
+                                        style={[styles.secondaryText, styles.timeText, { color: disabledText }]}
+                                    >
                                         {schedule.ends?.time}
                                     </ThemedText>
                                 )}
@@ -102,7 +112,9 @@ const styles = StyleSheet.create({
         paddingVertical: 8
     },
     secondaryText: {
-        fontSize: 14,
+        fontSize: 14
+    },
+    timeText: {
         textAlign: "right"
     },
     title: {

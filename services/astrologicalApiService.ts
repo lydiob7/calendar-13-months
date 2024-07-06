@@ -17,7 +17,7 @@ class AstrologicalApiService {
         baseURL: this.baseUrl
     });
 
-    getMoonSignName({ date, location, time, UTC }: GetMoonSignNameProps) {
+    async getMoonSignName({ date, location, time, UTC }: GetMoonSignNameProps) {
         const gregorianDate = getGregorianEquivalent(date);
         const year = gregorianDate.slice(0, 4);
         const month = gregorianDate.slice(5, 7);

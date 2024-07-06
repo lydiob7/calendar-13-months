@@ -1,25 +1,12 @@
-import React, { FC, useMemo, useState } from "react";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import React, { FC, useMemo } from "react";
+import { Modal, StyleSheet, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 import Event from "@/types/Event";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslationsContext } from "@/context/translationsContext";
 import { useCalendarContext } from "@/context/calendarContext";
 import { CustomDate } from "@/utils";
-
-interface ModalContentFieldProps {
-    label: string;
-    content: string;
-}
-
-const ModalContentField: FC<ModalContentFieldProps> = ({ content, label }) => {
-    return (
-        <View style={styles.contentField}>
-            <ThemedText style={{ fontWeight: 600, width: 80 }}>{label}</ThemedText>
-            <ThemedText style={styles.fieldContent}>{content}</ThemedText>
-        </View>
-    );
-};
+import ModalContentField from "./ModalContentField";
 
 interface EventModalProps {
     event: Event;
@@ -30,6 +17,7 @@ interface EventModalProps {
 const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, onClose }) => {
     const { schedule, title, type: eventType } = calendarEvent;
 
+    const backgroundColor = useThemeColor({}, "background");
     const disabledText = useThemeColor({}, "tabIconDefault");
     const { language } = useTranslationsContext();
 
@@ -51,7 +39,7 @@ const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, on
                 return word;
             })
             .join(" ");
-    }, [schedule, viewMode]);
+    }, [language, schedule, viewMode]);
 
     const endsDateString = useMemo(() => {
         const dateString = new CustomDate(schedule.ends.date, { withoutTime: true }).toString({
@@ -65,15 +53,21 @@ const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, on
                 return word;
             })
             .join(" ");
-    }, [schedule, viewMode]);
+    }, [language, schedule, viewMode]);
 
     return (
         <Modal animationType="slide" onRequestClose={onClose} presentationStyle="pageSheet" visible={isModalOpen}>
-            <View style={styles.container}>
+            <View style={[styles.container, { backgroundColor }]}>
                 <View style={[styles.header, { borderColor: disabledText }]}>
-                    <ThemedText style={styles.title}>{title}</ThemedText>
+                    <ThemedText style={styles.title}>
+                        {calendarEvent.type === "moon-phase"
+                            ? `${calendarEvent.phaseEmoji} ${
+                                  language.moonPhases?.[title as keyof typeof language.moonPhases]
+                              }`
+                            : title}
+                    </ThemedText>
                     <View style={{ marginTop: 12 }}>
-                        {isMultipleDaysEvent || !schedule.allDay ? (
+                        {(isMultipleDaysEvent || !schedule.allDay) && calendarEvent.type !== "moon-phase" ? (
                             <>
                                 <ThemedText style={[styles.secondaryText, { color: disabledText }]}>
                                     {language.common.fromTitle} {schedule.starts.time} {startsDateString}
@@ -84,7 +78,7 @@ const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, on
                             </>
                         ) : (
                             <ThemedText style={[styles.secondaryText, { color: disabledText }]}>
-                                {startsDateString}
+                                {startsDateString} {calendarEvent.type === "moon-phase" ? schedule.starts.time : ""}
                             </ThemedText>
                         )}
                         {schedule.allDay && (
@@ -115,22 +109,15 @@ export default EventModal;
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         padding: 16
     },
     content: {
         paddingVertical: 12
     },
-    contentField: {
-        flexDirection: "row",
-        gap: 8,
-        marginBottom: 8
-    },
     header: {
         borderBottomWidth: 1,
         paddingBottom: 12
-    },
-    fieldContent: {
-        flex: 1
     },
     title: {
         fontSize: 20,

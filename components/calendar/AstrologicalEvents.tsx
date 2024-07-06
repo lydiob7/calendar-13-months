@@ -1,22 +1,83 @@
-import React from "react";
-import { Button, Pressable, StyleSheet, View } from "react-native";
+import React, { useEffect, useMemo, useState } from "react";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import { Ionicons, Octicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedText } from "../ThemedText";
 import { useTranslationsContext } from "@/context/translationsContext";
+import { useCalendarContext } from "@/context/calendarContext";
+import { CustomDate, getGregorianEquivalent } from "@/utils";
+import astrologicalApiService from "@/services/astrologicalApiService";
+import ModalContentField from "./ModalContentField";
+import { Moon } from "lunarphase-js";
 
 const AstrologicalEvents = () => {
     const textColor = useThemeColor({}, "text");
     const backgroundColor = useThemeColor({}, "background");
+    const disabledText = useThemeColor({}, "tabIconDefault");
+
+    const [isLoadingMoonSign, setIsLoadingMoonSign] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [moonSign, setMoonSign] = useState<string | null>(null);
 
     const { language } = useTranslationsContext();
+    const { selectedDate, viewMode } = useCalendarContext();
+
+    const currentDateString = useMemo(() => {
+        if (!selectedDate) return "";
+
+        const dateString = new CustomDate(getGregorianEquivalent(selectedDate), { withoutTime: true }).toString({
+            type: viewMode
+        });
+        return dateString
+            .split(" ")
+            .map((word, i) => {
+                if (i === 0) return language.daysOfTheWeek.full[word as keyof typeof language.daysOfTheWeek.full];
+                if (i === 1) return language.months[word as keyof typeof language.months];
+                return word;
+            })
+            .join(" ");
+    }, [language, selectedDate, viewMode]);
+
+    useEffect(() => {
+        if (isModalOpen && selectedDate) {
+            setIsLoadingMoonSign(true);
+            astrologicalApiService
+                .getMoonSignName({
+                    date: selectedDate,
+                    location: "PosadasMisiones,Argentina",
+                    time: "12:00",
+                    UTC: "-3:00"
+                })
+                .then((res) => setMoonSign(res.data?.Payload?.MoonSignName || null))
+                .catch((err) => console.log(err))
+                .finally(() => setIsLoadingMoonSign(false));
+        }
+    }, [isModalOpen, selectedDate]);
+
+    const date = useMemo(
+        () => (selectedDate ? new Date(`${getGregorianEquivalent(selectedDate)}T00:00:00.000Z`) : null),
+        [selectedDate]
+    );
+
+    const moonPhase = useMemo(() => {
+        if (!date) return { emoji: "", text: "" };
+        return {
+            emoji: Moon.lunarPhaseEmoji(date),
+            text: Moon.lunarPhase(date)
+        };
+    }, [date]);
+
+    const lunationNumber = useMemo(() => {
+        if (!date) return "";
+        return Moon.lunationNumber(date).toString();
+    }, [date]);
 
     return (
         <>
-            <Pressable>
+            <Pressable onPress={() => setIsModalOpen(true)}>
                 <View style={[styles.buttonWrapper, { backgroundColor: backgroundColor }]}>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                        <Ionicons name="moon-outline" color={textColor} size={24} />
+                        <MaterialCommunityIcons name="pentagram" size={24} color={textColor} />
                         <ThemedText style={{ color: textColor, fontSize: 18 }}>
                             {language.events.astrologicalInfoTitle}
                         </ThemedText>
@@ -24,6 +85,40 @@ const AstrologicalEvents = () => {
                     <Ionicons name="chevron-forward-outline" color={textColor} size={20} />
                 </View>
             </Pressable>
+
+            <Modal
+                animationType="slide"
+                onRequestClose={() => setIsModalOpen(false)}
+                presentationStyle="pageSheet"
+                visible={isModalOpen}
+            >
+                <View style={[styles.modalContainer, { backgroundColor }]}>
+                    <View style={[styles.header, { borderColor: disabledText }]}>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                            <MaterialCommunityIcons name="pentagram" size={24} color={textColor} />
+                            <ThemedText style={styles.title}>{language.events.astrologicalInfoTitle}</ThemedText>
+                        </View>
+                        <View style={{ marginTop: 12 }}>
+                            <ThemedText style={[styles.secondaryText]}>{currentDateString}</ThemedText>
+                        </View>
+                    </View>
+
+                    <View style={styles.content}>
+                        <ModalContentField
+                            halfAndHalf
+                            content={`${moonPhase.emoji} ${moonPhase.text}`}
+                            label="Moon Phase"
+                        />
+                        <ModalContentField
+                            halfAndHalf
+                            content={moonSign}
+                            label="Moon Sign"
+                            loading={isLoadingMoonSign}
+                        />
+                        <ModalContentField halfAndHalf content={lunationNumber} label="Brown Lunation Number (BLN)" />
+                    </View>
+                </View>
+            </Modal>
         </>
     );
 };
@@ -45,5 +140,23 @@ const styles = StyleSheet.create({
             width: 2,
             height: 1
         }
+    },
+    content: {
+        paddingVertical: 12
+    },
+    modalContainer: {
+        flex: 1,
+        padding: 16
+    },
+    header: {
+        borderBottomWidth: 1,
+        paddingBottom: 12
+    },
+    secondaryText: {
+        fontSize: 14
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 500
     }
 });

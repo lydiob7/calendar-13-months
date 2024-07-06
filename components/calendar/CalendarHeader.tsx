@@ -73,13 +73,13 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                 {currentMonth ? (
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
                         <Pressable onPress={handleGoToPreviousMonth}>
-                            <Ionicons name="chevron-back-outline" size={20} />
+                            <Ionicons color={textColor} name="chevron-back-outline" size={20} />
                         </Pressable>
                         <ThemedText style={{ minWidth: 153, textAlign: "center" }}>
                             {language.months[currentMonth]} {currentYear}
                         </ThemedText>
                         <Pressable onPress={handleGoToNextMonth}>
-                            <Ionicons name="chevron-forward-outline" size={20} />
+                            <Ionicons color={textColor} name="chevron-forward-outline" size={20} />
                         </Pressable>
                     </View>
                 ) : (

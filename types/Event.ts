@@ -22,7 +22,7 @@ interface BaseEvent {
     title: string;
 }
 
-interface CustomEvent extends BaseEvent {
+export interface CustomEvent extends BaseEvent {
     type: "custom";
     location?: string;
     notes?: string;
@@ -33,14 +33,11 @@ interface CustomEvent extends BaseEvent {
     url?: string;
 }
 
-interface MoonPhaseEvent extends BaseEvent {
+export interface MoonPhaseEvent extends BaseEvent {
     type: "moon-phase";
+    phaseEmoji: string;
 }
 
-interface AstrologicalEvent extends BaseEvent {
-    type: "astrological-event";
-}
-
-type Event = CustomEvent | MoonPhaseEvent | AstrologicalEvent;
+type Event = CustomEvent | MoonPhaseEvent;
 
 export default Event;
