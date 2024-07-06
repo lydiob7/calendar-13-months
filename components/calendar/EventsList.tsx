@@ -6,6 +6,7 @@ import EventItem from "./EventItem";
 import { useCalendarContext } from "@/context/calendarContext";
 import Event from "@/types/Event";
 import mainApiService from "@/services/mainApiService";
+import AstrologicalEvents from "./AstrologicalEvents";
 
 const EventsList = () => {
     const { language } = useTranslationsContext();
@@ -19,6 +20,7 @@ const EventsList = () => {
 
     return (
         <View style={styles.container}>
+            <AstrologicalEvents />
             {!!data.length ? (
                 <FlatList
                     data={data}

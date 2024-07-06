@@ -1,3 +1,6 @@
+import DateString from "./DateString";
+import Time from "./Time";
+
 type EventAlert = "event-time" | "5min" | "10min" | "15min" | "30min" | "1h" | "2h" | "1d" | "2d" | "1w";
 type TravelTime = "5min" | "10min" | "15min" | "30min" | "1h" | "1h30min" | "2h";
 type EventRepeat = "day" | "week" | "2weeks" | "month" | "year";
@@ -8,12 +11,12 @@ interface BaseEvent {
     schedule: {
         allDay: boolean;
         ends: {
-            date: string;
-            time?: string;
+            date: DateString;
+            time?: Time;
         };
         starts: {
-            date: string;
-            time?: string;
+            date: DateString;
+            time?: Time;
         };
     };
     title: string;

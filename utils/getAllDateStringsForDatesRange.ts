@@ -2,8 +2,9 @@ import { compareAsc, compareDesc } from "date-fns";
 import monthDaysMap from "./monthDaysMap";
 import gregorianMonths from "./gregorianMonths";
 import CustomDate from "./CustomDate";
+import DateString from "@/types/DateString";
 
-function getAllDateStringsForDatesRange(dates: string[]) {
+function getAllDateStringsForDatesRange(dates: DateString[]) {
     if (dates.length !== 2) throw Error("This function expect two dates in the array");
     let startDate = dates[0];
     let endDate = dates[1];
@@ -19,26 +20,42 @@ function getAllDateStringsForDatesRange(dates: string[]) {
     const startDay = parseInt(startDate.slice(8, 10));
     const endDay = parseInt(endDate.slice(8, 10));
 
-    const dayStrings: string[] = [];
+    const dayStrings: DateString[] = [];
     for (let month = startMonth; month <= endMonth; month++) {
         const daysInMonth = monthDaysMap(new CustomDate(`${startYear}-02-02`, { withoutTime: true }).isLeapYear())[
             gregorianMonths[month - 1]
         ];
         if (startMonth === endMonth) {
             for (let day = startDay; day <= endDay; day++) {
-                dayStrings.push(`${startYear}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`);
+                dayStrings.push(
+                    `${startYear.toString().padStart(4, "0")}-${month.toString().padStart(2, "0")}-${day
+                        .toString()
+                        .padStart(2, "0")}` as DateString
+                );
             }
         } else if (month === startMonth) {
             for (let day = startDay; day <= daysInMonth; day++) {
-                dayStrings.push(`${startYear}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`);
+                dayStrings.push(
+                    `${startYear.toString().padStart(4, "0")}-${month.toString().padStart(2, "0")}-${day
+                        .toString()
+                        .padStart(2, "0")}` as DateString
+                );
             }
         } else if (month === endMonth) {
             for (let day = 1; day <= endDay; day++) {
-                dayStrings.push(`${startYear}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`);
+                dayStrings.push(
+                    `${startYear.toString().padStart(4, "0")}-${month.toString().padStart(2, "0")}-${day
+                        .toString()
+                        .padStart(2, "0")}` as DateString
+                );
             }
         } else {
             for (let day = 1; day <= daysInMonth; day++) {
-                dayStrings.push(`${startYear}-${month.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`);
+                dayStrings.push(
+                    `${startYear.toString().padStart(4, "0")}-${month.toString().padStart(2, "0")}-${day
+                        .toString()
+                        .padStart(2, "0")}` as DateString
+                );
             }
         }
     }

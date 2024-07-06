@@ -2,12 +2,13 @@ import SelectedDate from "@/types/SelectedDate";
 import { monthsMap } from "./calculateStartDay";
 import isFixedCalendarMonth from "./isFixedCalendarMonth";
 import CustomDate from "./CustomDate";
+import DateString from "@/types/DateString";
 
-function getGregorianEquivalent(date: SelectedDate) {
+function getGregorianEquivalent(date: SelectedDate): DateString {
     if (!isFixedCalendarMonth(date.month))
-        return `${date.year}-${(monthsMap[date.month] + 1)?.toString()?.padStart(2, "0")}-${date.date
+        return `${date.year.toString().padStart(4, "0")}-${(monthsMap[date.month] + 1)
             ?.toString()
-            ?.padStart(2, "0")}`;
+            ?.padStart(2, "0")}-${date.date?.toString()?.padStart(2, "0")}` as DateString;
     const isLeapYear = new CustomDate(`${date.year}-02-02`, { withoutTime: true }).isLeapYear();
     const monthIndex = monthsMap[date.month];
     let dayOfTheYear = 1;
@@ -16,7 +17,7 @@ function getGregorianEquivalent(date: SelectedDate) {
     else if (monthIndex === 14) dayOfTheYear = 169;
     else dayOfTheYear = monthIndex * 28 + date.date + 1;
     const dayOfTheYearInMilliseconds = dayOfTheYear * 24 * 60 * 60 * 1000 + new Date(date.year, 0, 0).getTime();
-    return new Date(dayOfTheYearInMilliseconds).toISOString().split("T")[0];
+    return new Date(dayOfTheYearInMilliseconds).toISOString().split("T")[0] as DateString;
 }
 
 export default getGregorianEquivalent;

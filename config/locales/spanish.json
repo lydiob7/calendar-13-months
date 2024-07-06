@@ -28,6 +28,12 @@
             "saturday": "SAB"
         }
     },
+    "events": {
+        "astrologicalInfoTitle": "Información astrológica",
+        "locationTitle": "Lugar",
+        "notesTitle": "Notas",
+        "urlTitle": "URL"
+    },
     "languages": {
         "en": "Inglés",
         "es": "Español"

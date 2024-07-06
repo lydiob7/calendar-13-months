@@ -28,6 +28,12 @@
             "saturday": "SAT"
         }
     },
+    "events": {
+        "astrologicalInfoTitle": "Astrological information",
+        "locationTitle": "Location",
+        "notesTitle": "Notes",
+        "urlTitle": "URL"
+    },
     "languages": {
         "en": "English",
         "es": "Spanish"

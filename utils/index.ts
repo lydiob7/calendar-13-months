@@ -12,6 +12,7 @@ export { default as fixedCalendarMonths } from "./fixedCalendarMonths";
 export * from "./fixedCalendarMonths";
 export { default as getAllDateStringsForDatesRange } from "./getAllDateStringsForDatesRange";
 export { default as getGregorianEquivalent } from "./getGregorianEquivalent";
+export { default as getRandomId } from "./getRandomId";
 export { default as gregorianMonths } from "./gregorianMonths";
 export { default as isFixedCalendarMonth } from "./isFixedCalendarMonth";
 export { default as mapDatesIntoFixedCalendar } from "./mapDatesIntoFixedCalendar";

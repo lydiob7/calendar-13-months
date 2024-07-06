@@ -1,149 +1,34 @@
 import Event from "@/types/Event";
 import { CustomDate, getAllDateStringsForDatesRange } from "@/utils";
 import { orderDayEvents } from "./utils";
+import { randomUUID } from "expo-crypto";
+import DateString from "@/types/DateString";
 
 interface GetMonthEventsProps {
-    endDate: string;
-    startDate: string;
+    endDate: DateString;
+    startDate: DateString;
 }
 
 class EventsDB {
     items: Event[] = [
         {
-            id: "123456",
+            id: randomUUID(),
             type: "custom",
             schedule: {
                 allDay: false,
                 ends: {
-                    date: "2024-07-02",
+                    date: "2024-07-05",
                     time: "11:00"
                 },
                 starts: {
-                    date: "2024-06-28",
-                    time: "09:00"
-                }
-            },
-            title: "First event"
-        },
-        {
-            id: "456789",
-            type: "custom",
-            schedule: {
-                allDay: true,
-                ends: {
-                    date: "2024-07-05"
-                },
-                starts: {
-                    date: "2024-07-05"
-                }
-            },
-            title: "Second event"
-        },
-        {
-            id: "1afds23456",
-            type: "custom",
-            schedule: {
-                allDay: false,
-                ends: {
                     date: "2024-07-05",
                     time: "09:00"
-                },
-                starts: {
-                    date: "2024-07-05",
-                    time: "07:05"
                 }
             },
-            title: "Third event"
-        },
-        {
-            id: "4567wert89",
-            type: "custom",
-            schedule: {
-                allDay: true,
-                ends: {
-                    date: "2024-07-05"
-                },
-                starts: {
-                    date: "2024-07-05"
-                }
-            },
-            title: "Fourth event"
-        },
-        {
-            id: "123shgdf456",
-            type: "custom",
-            schedule: {
-                allDay: false,
-                ends: {
-                    date: "2024-07-05",
-                    time: "07:30"
-                },
-                starts: {
-                    date: "2024-07-05",
-                    time: "07:00"
-                }
-            },
-            title: "Fifth event"
-        },
-        {
-            id: "456whh789",
-            type: "custom",
-            schedule: {
-                allDay: true,
-                ends: {
-                    date: "2024-07-05"
-                },
-                starts: {
-                    date: "2024-07-05"
-                }
-            },
-            title: "Sixth event"
-        },
-        {
-            id: "1234juj56",
-            type: "custom",
-            schedule: {
-                allDay: false,
-                ends: {
-                    date: "2024-07-05",
-                    time: "15:00"
-                },
-                starts: {
-                    date: "2024-07-05",
-                    time: "14:45"
-                }
-            },
-            title: "Seventh event"
-        },
-        {
-            id: "456dfhje∂789",
-            type: "custom",
-            schedule: {
-                allDay: true,
-                ends: {
-                    date: "2024-07-07"
-                },
-                starts: {
-                    date: "2024-07-07"
-                }
-            },
-            title: "Eighth event"
-        },
-        {
-            id: "4562dfhje∂789",
-            type: "custom",
-            schedule: {
-                allDay: false,
-                ends: {
-                    date: "2024-06-30",
-                    time: "14:00"
-                },
-                starts: {
-                    date: "2024-06-30",
-                    time: "13:30"
-                }
-            },
-            title: "Nineth event"
+            title: "First event with a very long title because I want to test the elipsis",
+            notes: "Ac orci commodo eget interdum leo consectetur massa eu molestie mi bibendum suspendisse nulla enim mi portaest tristique metus erat elementum purus condimentum ipsum diam. Adipiscing sollicitudin tristique interdum interdum quisque sed sit ac scelerisque aliquam et euismod pellentesque congue purus nisi sed amet fusce facilisis commodo proin nulla congue.",
+            location: "https://meet.google.com/efe-fwef",
+            url: "https://tomiscattini.com"
         }
     ];
 

@@ -5,9 +5,12 @@ import Event from "@/types/Event";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslationsContext } from "@/context/translationsContext";
 import { useCalendarContext } from "@/context/calendarContext";
-import { CustomDate, getGregorianEquivalent } from "@/utils";
+import { getGregorianEquivalent } from "@/utils";
+import EventModal from "./EventModal";
 
-const EventItem: FC<Event> = ({ id, schedule, title }) => {
+const EventItem: FC<Event> = (calendarEvent) => {
+    const { schedule, title } = calendarEvent;
+
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const disabledText = useThemeColor({}, "tabIconDefault");
@@ -15,7 +18,7 @@ const EventItem: FC<Event> = ({ id, schedule, title }) => {
     const tintColor = useThemeColor({}, "tabIconSelected");
     const { language } = useTranslationsContext();
 
-    const { selectedDate, viewMode } = useCalendarContext();
+    const { selectedDate } = useCalendarContext();
 
     const isMultipleDaysEvent = useMemo(() => {
         return new Set([schedule.starts.date, schedule.ends.date]).size > 1;
@@ -31,51 +34,33 @@ const EventItem: FC<Event> = ({ id, schedule, title }) => {
         return getGregorianEquivalent(selectedDate) === schedule.ends.date;
     }, [schedule, selectedDate?.date]);
 
-    const startsDateString = useMemo(() => {
-        const dateString = new CustomDate(schedule.starts.date, { withoutTime: true }).toString({
-            type: viewMode
-        });
-        return dateString
-            .split(" ")
-            .map((word, i) => {
-                if (i === 0) return language.daysOfTheWeek.full[word as keyof typeof language.daysOfTheWeek.full];
-                if (i === 1) return language.months[word as keyof typeof language.months];
-                return word;
-            })
-            .join(" ");
-    }, [schedule, viewMode]);
-
-    const endsDateString = useMemo(() => {
-        const dateString = new CustomDate(schedule.ends.date, { withoutTime: true }).toString({
-            type: viewMode
-        });
-        return dateString
-            .split(" ")
-            .map((word, i) => {
-                if (i === 0) return language.daysOfTheWeek.full[word as keyof typeof language.daysOfTheWeek.full];
-                if (i === 1) return language.months[word as keyof typeof language.months];
-                return word;
-            })
-            .join(" ");
-    }, [schedule, viewMode]);
-
     return (
         <>
             <Pressable onPress={() => setIsModalOpen(true)}>
                 <View style={[styles.container, { backgroundColor: themeBackground }]}>
                     <View style={[styles.leftSide, { borderLeftColor: tintColor }]}>
-                        <ThemedText style={styles.title}>{title}</ThemedText>
+                        <ThemedText numberOfLines={1} style={[styles.title, { maxWidth: 250 }]}>
+                            {title}
+                        </ThemedText>
+                        {calendarEvent.type === "custom" && calendarEvent.location && (
+                            <ThemedText
+                                numberOfLines={1}
+                                style={[styles.secondaryText, { color: disabledText, maxWidth: 250 }]}
+                            >
+                                {calendarEvent.location}
+                            </ThemedText>
+                        )}
                     </View>
                     <View style={styles.rightSide}>
                         {schedule.allDay || (isMultipleDaysEvent && !isStartDay && !isEndDay) ? (
-                            <ThemedText style={styles.time}>{language.common.allDayTitle}</ThemedText>
+                            <ThemedText style={styles.secondaryText}>{language.common.allDayTitle}</ThemedText>
                         ) : (
                             <>
                                 {(!isMultipleDaysEvent || isStartDay) && (
-                                    <ThemedText style={styles.time}>{schedule.starts?.time}</ThemedText>
+                                    <ThemedText style={styles.secondaryText}>{schedule.starts?.time}</ThemedText>
                                 )}
                                 {(!isMultipleDaysEvent || isEndDay) && (
-                                    <ThemedText style={[styles.time, { color: disabledText }]}>
+                                    <ThemedText style={[styles.secondaryText, { color: disabledText }]}>
                                         {schedule.ends?.time}
                                     </ThemedText>
                                 )}
@@ -85,39 +70,7 @@ const EventItem: FC<Event> = ({ id, schedule, title }) => {
                 </View>
             </Pressable>
 
-            <Modal
-                animationType="slide"
-                onRequestClose={() => setIsModalOpen(false)}
-                presentationStyle="pageSheet"
-                visible={isModalOpen}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={[styles.modalHeader, { borderColor: disabledText }]}>
-                        <ThemedText style={styles.modalTitle}>{title}</ThemedText>
-                        <View style={{ marginTop: 12 }}>
-                            {isMultipleDaysEvent || !schedule.allDay ? (
-                                <>
-                                    <ThemedText style={[styles.modalSecondaryText, { color: disabledText }]}>
-                                        {language.common.fromTitle} {schedule.starts.time} {startsDateString}
-                                    </ThemedText>
-                                    <ThemedText style={[styles.modalSecondaryText, { color: disabledText }]}>
-                                        {language.common.toTitle} {schedule.ends.time} {endsDateString}
-                                    </ThemedText>
-                                </>
-                            ) : (
-                                <ThemedText style={[styles.modalSecondaryText, { color: disabledText }]}>
-                                    {startsDateString}
-                                </ThemedText>
-                            )}
-                            {schedule.allDay && (
-                                <ThemedText style={[styles.modalSecondaryText, { color: disabledText }]}>
-                                    {language.common.allDayTitle}
-                                </ThemedText>
-                            )}
-                        </View>
-                    </View>
-                </View>
-            </Modal>
+            <EventModal event={calendarEvent} isModalOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </>
     );
 };
@@ -144,25 +97,11 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         height: "100%"
     },
-    modalContainer: {
-        padding: 16
-    },
-    modalHeader: {
-        borderBottomWidth: 1,
-        paddingBottom: 12
-    },
-    modalTitle: {
-        fontSize: 20,
-        fontWeight: 500
-    },
-    modalSecondaryText: {
-        fontSize: 14
-    },
     rightSide: {
         paddingHorizontal: 12,
         paddingVertical: 8
     },
-    time: {
+    secondaryText: {
         fontSize: 14,
         textAlign: "right"
     },
