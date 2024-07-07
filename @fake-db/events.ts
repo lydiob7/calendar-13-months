@@ -3,6 +3,7 @@ import { CustomDate, getAllDateStringsForDatesRange } from "@/utils";
 import { calculateMoonPhasesForRange, createMoonPhaseEvent, orderDayEvents } from "./utils";
 import { randomUUID } from "expo-crypto";
 import DateString from "@/types/DateString";
+import { calculateSolarEventsForRange, createSolarEvent } from "./solar-events";
 
 interface GetMonthEventsProps {
     endDate: DateString;
@@ -33,7 +34,6 @@ class EventsDB {
     ];
 
     getDayEvents(selectedDate: DateString) {
-        const moonPhaseEvent = createMoonPhaseEvent(selectedDate);
         const dayEvents = this.items.filter((event) => {
             return (
                 // events that start on the same selected date
@@ -47,12 +47,21 @@ class EventsDB {
                 )
             );
         });
+
+        // create moon phase event if required
+        const moonPhaseEvent = createMoonPhaseEvent(selectedDate);
         if (moonPhaseEvent) dayEvents.unshift(moonPhaseEvent);
+
+        // create solar event if required
+        const solarEvent = createSolarEvent(selectedDate);
+        if (solarEvent) dayEvents.unshift(solarEvent);
+
         return Promise.resolve(orderDayEvents(dayEvents));
     }
 
     getMonthEvents({ endDate, startDate }: GetMonthEventsProps) {
         const moonPhasesDates = calculateMoonPhasesForRange({ endDate, startDate });
+        const solarEvents = calculateSolarEventsForRange({ endDate, startDate });
         const monthEvents = this.items.filter((event) => {
             const eventStartDate = event.schedule.starts.date;
             const eventEndDate = event.schedule.ends.date;
@@ -81,9 +90,9 @@ class EventsDB {
         const monthEventsDates = monthEvents.map((event) => [
             ...new Set([event.schedule.starts.date, event.schedule.ends.date])
         ]);
-        // Array with only "one day" events' date as string
+        // Array with only "one day" events' date as string (custom events + moon phases + solar events)
         const oneDayEvents = monthEventsDates.filter((ev) => ev.length === 1).flat();
-        const dayStrings = [...oneDayEvents, ...moonPhasesDates];
+        const dayStrings = [...oneDayEvents, ...moonPhasesDates, ...solarEvents];
         // Array with only "multiple days" events' dates as array of two strings
         const multipleDayEvents = monthEventsDates.filter((ev) => ev.length > 1);
         // Get all intermediate dates from multiple days events

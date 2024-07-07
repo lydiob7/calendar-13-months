@@ -18,6 +18,7 @@ interface BaseEvent {
             date: DateString;
             time?: Time;
         };
+        punctualEvent?: boolean;
     };
     title: string;
 }
@@ -38,6 +39,11 @@ export interface MoonPhaseEvent extends BaseEvent {
     phaseEmoji: string;
 }
 
-type Event = CustomEvent | MoonPhaseEvent;
+export interface SolarEvent extends BaseEvent {
+    type: "solar-event";
+    solarType: "equinox" | "solstice" | "astrological-sign";
+}
+
+type Event = CustomEvent | MoonPhaseEvent | SolarEvent;
 
 export default Event;

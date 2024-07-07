@@ -87,13 +87,22 @@
         "leap-day": "Día bisiesto"
     },
     "moonPhases": {
-        "New": "New Moon",
-        "Waxing Crescent": "Waxing Crescent Moon",
-        "First Quarter": "First Quarter Moon",
-        "Waxing Gibbous": "Waxing Gibbous Moon",
-        "Full": "Full Moon",
-        "Waning Gibbous": "Waning Gibbous Moon",
-        "Last Quarter": "Last Quarter Moon",
-        "Waning Crescent": "Waning Crescent Moon"
-    }
+        "New": "Luna nueva",
+        "Waxing Crescent": "Luna creciente",
+        "First Quarter": "Luna en primer cuarto",
+        "Waxing Gibbous": "Luna gibosa Creciente",
+        "Full": "Luna llena",
+        "Waning Gibbous": "Luna gibosa menguante",
+        "Last Quarter": "Luna en último cuarto",
+        "Waning Crescent": "Luna menguante"
+    },
+    "solarEvents": {
+        "equinox": "Equinoccio",
+        "solstice": "Solsticio",
+        "march-equinox": "Equinoccio de Marzo",
+        "june-solstice": "Solsticio de Junio",
+        "september-equinox": "Equinoccio de Septiembre",
+        "december-solstice": "Equinoccio de Diciembre"
+    },
+    "userMessages": {}
 }

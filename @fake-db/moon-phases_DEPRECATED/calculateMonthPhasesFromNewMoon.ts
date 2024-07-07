@@ -1,6 +1,6 @@
 import { CustomDate } from "@/utils";
 import { LUNAR_CYCLE_DAYS_FROM_DATA_2024_MILISECONDS } from "./constants";
-import LunarPhase from "@/@fake-db/moon-phases/LunarPhase";
+import LunarPhase from "./LunarPhase";
 
 function calculateMonthPhasesFromNewMoon(newMoon: CustomDate) {
     const newMoonInMiliseconds = newMoon.getTime();

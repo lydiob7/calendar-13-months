@@ -60,14 +60,16 @@ const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, on
             <View style={[styles.container, { backgroundColor }]}>
                 <View style={[styles.header, { borderColor: disabledText }]}>
                     <ThemedText style={styles.title}>
-                        {calendarEvent.type === "moon-phase"
-                            ? `${calendarEvent.phaseEmoji} ${
-                                  language.moonPhases?.[title as keyof typeof language.moonPhases]
-                              }`
-                            : title}
+                        {calendarEvent.type === "moon-phase" &&
+                            `${calendarEvent.phaseEmoji} ${
+                                language.moonPhases?.[title as keyof typeof language.moonPhases]
+                            }`}
+                        {calendarEvent.type === "solar-event" &&
+                            language.solarEvents?.[title as keyof typeof language.solarEvents]}
+                        {calendarEvent.type === "custom" && title}
                     </ThemedText>
                     <View style={{ marginTop: 12 }}>
-                        {(isMultipleDaysEvent || !schedule.allDay) && calendarEvent.type !== "moon-phase" ? (
+                        {(isMultipleDaysEvent || !schedule.allDay) && !schedule.punctualEvent ? (
                             <>
                                 <ThemedText style={[styles.secondaryText, { color: disabledText }]}>
                                     {language.common.fromTitle} {schedule.starts.time} {startsDateString}
@@ -78,7 +80,7 @@ const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, on
                             </>
                         ) : (
                             <ThemedText style={[styles.secondaryText, { color: disabledText }]}>
-                                {startsDateString} {calendarEvent.type === "moon-phase" ? schedule.starts.time : ""}
+                                {startsDateString} {schedule.punctualEvent ? schedule.starts.time : ""}
                             </ThemedText>
                         )}
                         {schedule.allDay && (

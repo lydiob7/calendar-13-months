@@ -34,17 +34,25 @@ const EventItem: FC<Event> = (calendarEvent) => {
         return getGregorianEquivalent(selectedDate) === schedule.ends.date;
     }, [schedule, selectedDate?.date]);
 
+    const borderColorOptions = {
+        custom: tintColor,
+        "moon-phase": "#23527c",
+        "solar-event": "#5dd25e"
+    };
+
     return (
         <>
             <Pressable onPress={() => setIsModalOpen(true)}>
                 <View style={[styles.container, { backgroundColor: themeBackground }]}>
-                    <View style={[styles.leftSide, { borderLeftColor: tintColor }]}>
+                    <View style={[styles.leftSide, { borderLeftColor: borderColorOptions[calendarEvent.type] }]}>
                         <ThemedText numberOfLines={1} style={[styles.title, { maxWidth: 250 }]}>
-                            {calendarEvent.type === "moon-phase"
-                                ? `${calendarEvent.phaseEmoji} ${
-                                      language.moonPhases?.[title as keyof typeof language.moonPhases]
-                                  }`
-                                : title}
+                            {calendarEvent.type === "moon-phase" &&
+                                `${calendarEvent.phaseEmoji} ${
+                                    language.moonPhases?.[title as keyof typeof language.moonPhases]
+                                }`}
+                            {calendarEvent.type === "solar-event" &&
+                                `☀️ ${language.solarEvents?.[title as keyof typeof language.solarEvents]}`}
+                            {calendarEvent.type === "custom" && title}
                         </ThemedText>
                         {calendarEvent.type === "custom" && calendarEvent.location && (
                             <ThemedText
@@ -67,7 +75,7 @@ const EventItem: FC<Event> = (calendarEvent) => {
                                         {schedule.starts?.time}
                                     </ThemedText>
                                 )}
-                                {(!isMultipleDaysEvent || isEndDay) && calendarEvent.type !== "moon-phase" && (
+                                {(!isMultipleDaysEvent || isEndDay) && !schedule.punctualEvent && (
                                     <ThemedText
                                         style={[styles.secondaryText, styles.timeText, { color: disabledText }]}
                                     >
@@ -102,7 +110,7 @@ const styles = StyleSheet.create({
         }
     },
     leftSide: {
-        borderLeftWidth: 4,
+        borderLeftWidth: 6,
         paddingLeft: 12,
         paddingVertical: 8,
         height: "100%"

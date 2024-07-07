@@ -95,5 +95,14 @@
         "Waning Gibbous": "Waning Gibbous Moon",
         "Last Quarter": "Last Quarter Moon",
         "Waning Crescent": "Waning Crescent Moon"
-    }
+    },
+    "solarEvents": {
+        "equinox": "Equinox",
+        "solstice": "Solstice",
+        "march-equinox": "March Equinox",
+        "june-solstice": "June Solstice",
+        "september-equinox": "September Equinox",
+        "december-solstice": "December Equinox"
+    },
+    "userMessages": {}
 }

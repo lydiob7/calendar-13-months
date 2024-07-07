@@ -29,6 +29,7 @@ function createMoonPhaseEvent(date: DateString): MoonPhaseEvent | null {
             title: Moon.lunarPhase(dateDate),
             schedule: {
                 allDay: false,
+                punctualEvent: true,
                 starts: { date, time: phaseExactTime },
                 ends: { date, time: phaseExactTime }
             }
