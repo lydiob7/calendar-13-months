@@ -104,5 +104,19 @@
         "september-equinox": "Equinoccio de Septiembre",
         "december-solstice": "Equinoccio de Diciembre"
     },
+    "solarEventsMoreInfo": {
+        "southern": {
+            "march-equinox": "Comienzo del otoño en el hemisferio sur",
+            "june-solstice": "Comienzo del invierno en el hemisferio sur",
+            "september-equinox": "Comienzo de la primavera en el hemisferio sur",
+            "december-solstice": "Comienzo del verano en el hemisferio sur"
+        },
+        "northern": {
+            "march-equinox": "Comienzo de la primavera en el hemisferio norte",
+            "june-solstice": "Comienzo del verano en el hemisferio norte",
+            "september-equinox": "Comienzo del otoño en el hemisferio norte",
+            "december-solstice": "Comienzo del invierno en el hemisferio norte"
+        }
+    },
     "userMessages": {}
 }

@@ -104,5 +104,19 @@
         "september-equinox": "September Equinox",
         "december-solstice": "December Equinox"
     },
+    "solarEventsMoreInfo": {
+        "southern": {
+            "march-equinox": "Start of autumn season on the southern hemisphere",
+            "june-solstice": "Start of winter season on the southern hemisphere",
+            "september-equinox": "Start of spring season on the southern hemisphere",
+            "december-solstice": "Start of summer season on the southern hemisphere"
+        },
+        "northern": {
+            "march-equinox": "Start of spring season on the northern hemisphere",
+            "june-solstice": "Start of summer season on the northern hemisphere",
+            "september-equinox": "Start of autumn season on the northern hemisphere",
+            "december-solstice": "Start of winter season on the northern hemisphere"
+        }
+    },
     "userMessages": {}
 }

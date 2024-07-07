@@ -41,7 +41,7 @@ export interface MoonPhaseEvent extends BaseEvent {
 
 export interface SolarEvent extends BaseEvent {
     type: "solar-event";
-    solarType: "equinox" | "solstice" | "astrological-sign";
+    solarType: "equinox" | "solstice";
 }
 
 type Event = CustomEvent | MoonPhaseEvent | SolarEvent;

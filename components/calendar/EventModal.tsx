@@ -7,6 +7,7 @@ import { useTranslationsContext } from "@/context/translationsContext";
 import { useCalendarContext } from "@/context/calendarContext";
 import { CustomDate } from "@/utils";
 import ModalContentField from "./ModalContentField";
+import Hemisphere from "@/types/Hemisphere";
 
 interface EventModalProps {
     event: Event;
@@ -21,7 +22,7 @@ const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, on
     const disabledText = useThemeColor({}, "tabIconDefault");
     const { language } = useTranslationsContext();
 
-    const { viewMode } = useCalendarContext();
+    const { hemisphere, viewMode } = useCalendarContext();
 
     const isMultipleDaysEvent = useMemo(() => {
         return new Set([schedule.starts.date, schedule.ends.date]).size > 1;
@@ -54,6 +55,12 @@ const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, on
             })
             .join(" ");
     }, [language, schedule, viewMode]);
+
+    const solarEventMoreInfo = useMemo(() => {
+        if (!hemisphere || eventType !== "solar-event") return "";
+        const eventTitle = calendarEvent.title as keyof typeof language.solarEventsMoreInfo.southern;
+        return language.solarEventsMoreInfo[hemisphere][eventTitle];
+    }, [calendarEvent, hemisphere, language]);
 
     return (
         <Modal animationType="slide" onRequestClose={onClose} presentationStyle="pageSheet" visible={isModalOpen}>
@@ -101,6 +108,7 @@ const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, on
                     {eventType === "custom" && calendarEvent.url && (
                         <ModalContentField content={calendarEvent.url} label={language.events.urlTitle} />
                     )}
+                    {eventType === "solar-event" && <ThemedText>{solarEventMoreInfo}</ThemedText>}
                 </View>
             </View>
         </Modal>
