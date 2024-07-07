@@ -1,6 +1,7 @@
 import DateString from "@/types/DateString";
 import { getAllDateStringsForDatesRange } from "@/utils";
 import { Moon } from "lunarphase-js";
+import { PHASE_AGES } from "./constants";
 
 interface CalculateMoonPhasesForRangeProps {
     endDate: DateString;
@@ -10,9 +11,8 @@ interface CalculateMoonPhasesForRangeProps {
 function calculateMoonPhasesForRange({ endDate, startDate }: CalculateMoonPhasesForRangeProps): DateString[] {
     const rangeDates = getAllDateStringsForDatesRange([startDate, endDate]);
     const phasesDates = rangeDates.filter((date) => {
-        const datePhaseAge = Math.ceil(Moon.lunarAge(new Date(`${date}T00:00:00.000Z`)));
-        const phasesAges = [0, 7, 14, 22, 29];
-        if (phasesAges.includes(datePhaseAge)) return true;
+        const datePhaseAge = Moon.lunarAge(new Date(`${date}T00:00`));
+        if (PHASE_AGES.some((age) => age + 0.5 >= datePhaseAge && age - 0.5 <= datePhaseAge)) return true;
         return false;
     });
     return phasesDates;

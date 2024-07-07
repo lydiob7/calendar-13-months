@@ -1,7 +1,7 @@
 import { CustomDate } from "@/utils";
-import { daysFromMil, daysToMil, hoursToMil, minToMil } from "../utils";
-import LunarMonth from "@/@fake-db/moon-phases/LunarMonth";
-import LunarPhase from "@/@fake-db/moon-phases/LunarPhase";
+import { daysToMil, hoursToMil, minToMil } from "../utils";
+import LunarPhase from "./LunarPhase";
+import LunarMonth from "./LunarMonth";
 
 export const LUNAR_PHASES: LunarPhase[] = [
     "new-moon",

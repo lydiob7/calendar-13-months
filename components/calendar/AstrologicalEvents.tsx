@@ -9,6 +9,7 @@ import { CustomDate, getGregorianEquivalent } from "@/utils";
 import astrologicalApiService from "@/services/astrologicalApiService";
 import ModalContentField from "./ModalContentField";
 import { Moon } from "lunarphase-js";
+import getSolarSign from "@/utils/getSolarSign";
 
 const AstrologicalEvents = () => {
     const textColor = useThemeColor({}, "text");
@@ -67,6 +68,11 @@ const AstrologicalEvents = () => {
         };
     }, [date]);
 
+    const solarSign = useMemo(() => {
+        if (!selectedDate) return "";
+        return getSolarSign(selectedDate);
+    }, [selectedDate]);
+
     const lunationNumber = useMemo(() => {
         if (!date) return "";
         return Moon.lunationNumber(date).toString();
@@ -107,15 +113,28 @@ const AstrologicalEvents = () => {
                         <ModalContentField
                             halfAndHalf
                             content={`${moonPhase.emoji} ${moonPhase.text}`}
-                            label="Moon Phase"
+                            label={language.common.moonPhaseTitle}
                         />
                         <ModalContentField
                             halfAndHalf
-                            content={moonSign}
-                            label="Moon Sign"
+                            content={language.astrologicalSigns?.[solarSign as keyof typeof language.astrologicalSigns]}
+                            label={language.common.sunSignTitle}
+                        />
+                        <ModalContentField
+                            halfAndHalf
+                            content={
+                                language.astrologicalSigns?.[
+                                    moonSign?.toLowerCase() as keyof typeof language.astrologicalSigns
+                                ]
+                            }
+                            label={language.common.moonSignTitle}
                             loading={isLoadingMoonSign}
                         />
-                        <ModalContentField halfAndHalf content={lunationNumber} label="Brown Lunation Number (BLN)" />
+                        <ModalContentField
+                            halfAndHalf
+                            content={lunationNumber}
+                            label={language.common.luntationTitle}
+                        />
                     </View>
                 </View>
             </Modal>

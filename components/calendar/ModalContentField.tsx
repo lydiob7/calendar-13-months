@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { StyleSheet, View } from "react-native";
 import { ThemedText } from "../ThemedText";
+import { useTranslationsContext } from "@/context/translationsContext";
 
 interface ModalContentFieldProps {
     autoWidth?: boolean;
@@ -11,6 +12,8 @@ interface ModalContentFieldProps {
 }
 
 const ModalContentField: FC<ModalContentFieldProps> = ({ autoWidth, content, halfAndHalf, label, loading }) => {
+    const { language } = useTranslationsContext();
+
     return (
         <View style={styles.contentField}>
             <ThemedText
@@ -19,7 +22,7 @@ const ModalContentField: FC<ModalContentFieldProps> = ({ autoWidth, content, hal
                 {label}
             </ThemedText>
             <ThemedText style={[styles.fieldContent, halfAndHalf && { flex: 1 }]}>
-                {loading ? "Loading..." : content}
+                {loading ? `${language.common.loadingTitle}...` : content}
             </ThemedText>
         </View>
     );

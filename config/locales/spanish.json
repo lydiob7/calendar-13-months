@@ -1,10 +1,29 @@
 {
+    "astrologicalSigns": {
+        "capricorn": "Capricornio",
+        "aquarius": "Acuario",
+        "pisces": "Picis",
+        "aries": "Aries",
+        "taurus": "Tauro",
+        "gemini": "Géminis",
+        "cancer": "Cancer",
+        "leo": "Leo",
+        "virgo": "Virgo",
+        "libra": "Libra",
+        "scorpio": "Escorpio",
+        "sagittarius": "Sagitario"
+    },
     "common": {
         "allDayTitle": "Todo el día",
         "eventsTitle": "Eventos",
         "fromTitle": "Desde",
+        "loadingTitle": "Cargando",
+        "luntationTitle": "Número de lunación de Brown (BLN)",
         "monthTitle": "Mes",
-        "noEventsTitle": "No events",
+        "moonPhaseTitle": "Fase lunar",
+        "moonSignTitle": "Signo lunar",
+        "noEventsTitle": "No hay eventos",
+        "sunSignTitle": "Signo solar",
         "toTitle": "Hasta",
         "yearTitle": "Año"
     },
