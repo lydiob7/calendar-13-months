@@ -72,7 +72,7 @@ const EventModal: FC<EventModalProps> = ({ event: calendarEvent, isModalOpen, on
                                 language.moonPhases?.[title as keyof typeof language.moonPhases]
                             }`}
                         {calendarEvent.type === "solar-event" &&
-                            language.solarEvents?.[title as keyof typeof language.solarEvents]}
+                            `☀️ ${language.solarEvents?.[title as keyof typeof language.solarEvents]}`}
                         {calendarEvent.type === "custom" && title}
                     </ThemedText>
                     <View style={{ marginTop: 12 }}>

@@ -112,7 +112,9 @@ const AstrologicalEvents = () => {
                     <View style={styles.content}>
                         <ModalContentField
                             halfAndHalf
-                            content={`${moonPhase.emoji} ${moonPhase.text}`}
+                            content={`${moonPhase.emoji} ${
+                                language.moonPhases?.[moonPhase.text as keyof typeof language.moonPhases]
+                            }`}
                             label={language.common.moonPhaseTitle}
                         />
                         <ModalContentField
