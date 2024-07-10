@@ -1,5 +1,6 @@
 import { useCalendarContext } from "@/context/calendarContext";
 import { DAY_OUT_OF_TIME_KEY, LEAP_DAY_KEY } from "@/utils";
+import { useLinkTo } from "@react-navigation/native";
 import React, { FC } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -10,6 +11,7 @@ interface DayOutOfTimeProps {
 
 const DayOutOfTime: FC<DayOutOfTimeProps> = ({ monthKey, isSingleMonthScreen }) => {
     const { currentYear, handleSelectFirstDayOfTheMonth, setCurrentMonth, setCurrentYear } = useCalendarContext();
+    const linkTo = useLinkTo();
 
     return (
         <View style={styles.day}>
@@ -21,6 +23,7 @@ const DayOutOfTime: FC<DayOutOfTimeProps> = ({ monthKey, isSingleMonthScreen }) 
                         setCurrentYear(currentYear);
                         setCurrentMonth(monthKey || DAY_OUT_OF_TIME_KEY);
                         handleSelectFirstDayOfTheMonth(monthKey || DAY_OUT_OF_TIME_KEY, currentYear);
+                        linkTo("/MonthView");
                     }}
                 >
                     <Image source={require("@/assets/images/day-out-of-time.png")} style={styles.image} />

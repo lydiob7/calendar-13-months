@@ -96,6 +96,12 @@
         "Last Quarter": "Last Quarter Moon",
         "Waning Crescent": "Waning Crescent Moon"
     },
+    "navigationMenu": {
+        "yearView": "Year view",
+        "monthView": "Month view",
+        "toggleView": "Toggle calendar",
+        "settings": "Settings"
+    },
     "solarEvents": {
         "equinox": "Equinox",
         "solstice": "Solstice",

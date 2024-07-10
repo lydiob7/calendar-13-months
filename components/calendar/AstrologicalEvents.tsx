@@ -5,7 +5,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { ThemedText } from "../ThemedText";
 import { useTranslationsContext } from "@/context/translationsContext";
 import { useCalendarContext } from "@/context/calendarContext";
-import { CustomDate, getGregorianEquivalent } from "@/utils";
+import { CustomDate, getGregorianEquivalent, toggleCurrentMonthViewMode } from "@/utils";
 import astrologicalApiService from "@/services/astrologicalApiService";
 import ModalContentField from "./ModalContentField";
 import { Moon } from "lunarphase-js";
@@ -70,8 +70,8 @@ const AstrologicalEvents = () => {
 
     const solarSign = useMemo(() => {
         if (!selectedDate) return "";
-        return getSolarSign(selectedDate);
-    }, [selectedDate]);
+        return getSolarSign(viewMode === "gregorian" ? selectedDate : toggleCurrentMonthViewMode(selectedDate));
+    }, [selectedDate, viewMode]);
 
     const lunationNumber = useMemo(() => {
         if (!date) return "";

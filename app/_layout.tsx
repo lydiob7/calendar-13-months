@@ -1,6 +1,5 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
@@ -8,9 +7,17 @@ import "react-native-reanimated";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import CalendarContextProvider from "@/context/calendarContext";
 import TranslationsContextProvider from "@/context/translationsContext";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import MonthView from "./MonthView";
+import Index from "./index";
+import MainDrawer from "@/components/navigation/MainDrawer";
+import Settings from "./Settings";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+const Drawer = createDrawerNavigator();
 
 export default function RootLayout() {
     const colorScheme = useColorScheme();
@@ -32,9 +39,16 @@ export default function RootLayout() {
         <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
             <TranslationsContextProvider>
                 <CalendarContextProvider>
-                    <Stack>
-                        <Stack.Screen name="index" options={{ title: "Year view", headerShown: false }} />
-                    </Stack>
+                    <GestureHandlerRootView style={{ flex: 1 }}>
+                        <Drawer.Navigator
+                            drawerContent={MainDrawer}
+                            screenOptions={{ headerShown: false, swipeEdgeWidth: 0 }}
+                        >
+                            <Drawer.Screen name="index" component={Index} />
+                            <Drawer.Screen name="MonthView" component={MonthView} />
+                            <Drawer.Screen name="Settings" component={Settings} options={{ headerShown: true }} />
+                        </Drawer.Navigator>
+                    </GestureHandlerRootView>
                 </CalendarContextProvider>
             </TranslationsContextProvider>
         </ThemeProvider>

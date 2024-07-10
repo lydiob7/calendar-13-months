@@ -1,11 +1,8 @@
-import Calendar from "@/components/calendar/Calendar";
 import CalendarHeader from "@/components/calendar/CalendarHeader";
-import useUserGeoLocations from "@/hooks/useUserGeoLocations";
+import MonthViewScreen from "@/components/calendar/MonthViewScreen";
 import { Platform, SafeAreaView, StatusBar } from "react-native";
 
-export default function Index() {
-    useUserGeoLocations();
-
+const MonthView = () => {
     return (
         <SafeAreaView
             style={{
@@ -16,7 +13,9 @@ export default function Index() {
             }}
         >
             <CalendarHeader />
-            <Calendar />
+            <MonthViewScreen />
         </SafeAreaView>
     );
-}
+};
+
+export default MonthView;

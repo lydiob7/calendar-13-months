@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import GregorianMonth from "@/types/GregorianMonth";
 import FixedCalendarMonth from "@/types/FixedCalendarMonth";
 import { ThemedText } from "../ThemedText";
@@ -9,6 +9,7 @@ import DayOutOfTime from "./DayOutOfTime";
 import { Colors } from "@/constants/Colors";
 import { useCalendarContext } from "@/context/calendarContext";
 import { useTranslationsContext } from "@/context/translationsContext";
+import { useLinkTo } from "@react-navigation/native";
 
 interface MonthProps {
     monthKey: GregorianMonth | FixedCalendarMonth;
@@ -16,6 +17,7 @@ interface MonthProps {
 }
 
 const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
+    const linkTo = useLinkTo();
     const { language } = useTranslationsContext();
     const { currentYear, handleSelectFirstDayOfTheMonth, setCurrentMonth, setCurrentYear, today, viewMode } =
         useCalendarContext();
@@ -39,6 +41,13 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
     const dayOutOfTime = useMemo(() => monthKey === DAY_OUT_OF_TIME_KEY, [monthKey]);
     const leapDay = useMemo(() => monthKey === LEAP_DAY_KEY, [monthKey]);
 
+    const handleSelectMonth = useCallback(() => {
+        setCurrentYear(currentYear);
+        setCurrentMonth(monthKey);
+        handleSelectFirstDayOfTheMonth(monthKey, currentYear);
+        linkTo("/MonthView");
+    }, [currentYear, handleSelectFirstDayOfTheMonth, monthKey]);
+
     return (
         <View style={styles.month}>
             <ThemedText
@@ -53,13 +62,7 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
                 <DayOutOfTime monthKey={monthKey as typeof DAY_OUT_OF_TIME_KEY | typeof LEAP_DAY_KEY} />
             )}
             {!leapDay && !dayOutOfTime && (
-                <Pressable
-                    onPress={() => {
-                        setCurrentYear(currentYear);
-                        setCurrentMonth(monthKey);
-                        handleSelectFirstDayOfTheMonth(monthKey, currentYear);
-                    }}
-                >
+                <Pressable onPress={handleSelectMonth}>
                     <View style={styles.weeksWrapper}>
                         {divideMonthIntoWeeks({ days, startDay }).map((week, i) => (
                             <Week days={week} isCurrentMonth={isCurrentMonth} key={i} monthKey={monthKey} />

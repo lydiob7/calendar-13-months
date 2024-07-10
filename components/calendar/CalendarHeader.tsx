@@ -4,9 +4,10 @@ import { ThemedText } from "../ThemedText";
 import { useCalendarContext } from "@/context/calendarContext";
 import { Picker } from "@react-native-picker/picker";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { calculateNextMonth, calculatePreviousMonth, toggleCurrentMonthViewMode } from "@/utils";
+import { calculateNextMonth, calculatePreviousMonth } from "@/utils";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslationsContext } from "@/context/translationsContext";
+import { DrawerToggleButton } from "@react-navigation/drawer";
 
 interface CalendarHeaderProps {}
 
@@ -22,13 +23,10 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
     const {
         currentMonth,
         currentYear,
-        handleSelectDate,
         handleSelectFirstDayOfTheMonth,
         handleSelectToday,
-        selectedDate,
         setCurrentMonth,
         setCurrentYear,
-        setViewMode,
         today
     } = useCalendarContext();
 
@@ -40,16 +38,6 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
     const toggleDropdown = () => {
         setIsDropdownOpen((prev) => !prev);
     };
-
-    const toggleCalendarMode = useCallback(() => {
-        if (currentMonth && selectedDate) {
-            const newSelectedDate = toggleCurrentMonthViewMode(selectedDate);
-            setCurrentYear(newSelectedDate.year);
-            setCurrentMonth(newSelectedDate.month);
-            handleSelectDate(newSelectedDate);
-        }
-        setViewMode((prev) => (prev === "fixed" ? "gregorian" : "fixed"));
-    }, [currentMonth, handleSelectDate, selectedDate]);
 
     const handleGoToPreviousMonth = useCallback(() => {
         if (!currentMonth) return;
@@ -70,6 +58,7 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
     return (
         <>
             <View style={styles.container}>
+                <DrawerToggleButton />
                 {currentMonth ? (
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
                         <Pressable onPress={handleGoToPreviousMonth}>
@@ -128,26 +117,15 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                 )}
 
                 <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-                    <Pressable onPress={toggleCalendarMode}>
-                        <MaterialCommunityIcons name="cached" size={26} color={tabIconDefaultColor} />
-                    </Pressable>
-                    <Pressable
-                        onPress={() => {
-                            setCurrentMonth(null);
-                        }}
-                    >
-                        <MaterialCommunityIcons
-                            name="calendar-month-outline"
-                            size={26}
-                            color={!currentMonth ? tabIconSelectedColor : tabIconDefaultColor}
-                        />
-                    </Pressable>
                     <Pressable onPress={handleSelectToday}>
                         <MaterialCommunityIcons
                             name="calendar-today"
                             size={26}
                             color={currentMonth ? tabIconSelectedColor : tabIconDefaultColor}
                         />
+                    </Pressable>
+                    <Pressable>
+                        <MaterialCommunityIcons name="plus" size={26} color={tabIconSelectedColor} />
                     </Pressable>
                 </View>
             </View>
@@ -161,8 +139,8 @@ const styles = StyleSheet.create({
     container: {
         width: "100%",
         zIndex: 3,
-        paddingTop: 10,
-        paddingHorizontal: 10,
+        paddingTop: 12,
+        paddingRight: 12,
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-between"
@@ -175,7 +153,6 @@ const styles = StyleSheet.create({
     modalBackdrop: {
         position: "absolute",
         top: 0,
-        left: 0,
         width: 500,
         height: 1200,
         zIndex: 3,
@@ -185,6 +162,7 @@ const styles = StyleSheet.create({
         position: "relative",
         width: 250,
         top: 48,
+        left: "25%",
         zIndex: 4
     },
     yearDropdown: {

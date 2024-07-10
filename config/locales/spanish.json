@@ -96,6 +96,12 @@
         "Last Quarter": "Luna en último cuarto",
         "Waning Crescent": "Luna menguante"
     },
+    "navigationMenu": {
+        "yearView": "Vista anual",
+        "monthView": "Vista mensual",
+        "toggleView": "Alternar calendario",
+        "settings": "Ajustes"
+    },
     "solarEvents": {
         "equinox": "Equinoccio",
         "solstice": "Solsticio",
