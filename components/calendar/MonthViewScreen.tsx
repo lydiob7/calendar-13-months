@@ -64,6 +64,7 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
     );
 
     useEffect(() => {
+        const isLooseDay = currentMonth === LEAP_DAY_KEY || currentMonth === DAY_OUT_OF_TIME_KEY;
         if (currentMonth)
             mainApiService
                 .getRangeEvents({
@@ -73,7 +74,7 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
                         year: currentYear
                     },
                     endDate: {
-                        date: days,
+                        date: isLooseDay ? 1 : days,
                         month: currentMonth,
                         year: currentYear
                     }

@@ -9,7 +9,9 @@ import DayOutOfTime from "./DayOutOfTime";
 import { Colors } from "@/constants/Colors";
 import { useCalendarContext } from "@/context/calendarContext";
 import { useTranslationsContext } from "@/context/translationsContext";
-import { useLinkTo } from "@react-navigation/native";
+import routes from "@/config/routes";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationHelpers } from "@react-navigation/drawer/lib/typescript/src/types";
 
 interface MonthProps {
     monthKey: GregorianMonth | FixedCalendarMonth;
@@ -17,7 +19,7 @@ interface MonthProps {
 }
 
 const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
-    const linkTo = useLinkTo();
+    const navigation = useNavigation<DrawerNavigationHelpers>();
     const { language } = useTranslationsContext();
     const { currentYear, handleSelectFirstDayOfTheMonth, setCurrentMonth, setCurrentYear, today, viewMode } =
         useCalendarContext();
@@ -45,7 +47,7 @@ const Month: FC<MonthProps> = ({ monthKey, startDay }) => {
         setCurrentYear(currentYear);
         setCurrentMonth(monthKey);
         handleSelectFirstDayOfTheMonth(monthKey, currentYear);
-        linkTo("/MonthView");
+        navigation.navigate(routes.monthView);
     }, [currentYear, handleSelectFirstDayOfTheMonth, monthKey]);
 
     return (

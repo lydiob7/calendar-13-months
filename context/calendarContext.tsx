@@ -1,9 +1,11 @@
+import routes from "@/config/routes";
 import geoLocationApiService, { GetLocationInfoResponse } from "@/services/geoLocationApiService";
 import FixedCalendarMonth from "@/types/FixedCalendarMonth";
 import GregorianMonth from "@/types/GregorianMonth";
 import Hemisphere from "@/types/Hemisphere";
 import SelectedDate from "@/types/SelectedDate";
 import { CustomDate } from "@/utils";
+import { useLinkTo } from "@react-navigation/native";
 import { LocationObject } from "expo-location";
 import { Dispatch, ReactNode, SetStateAction, createContext, useCallback, useContext, useMemo, useState } from "react";
 
@@ -32,6 +34,8 @@ const CalendarContext = createContext<CalendarContextProps | undefined>(undefine
 const today = new CustomDate();
 
 const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
+    const linkTo = useLinkTo();
+
     const [currentMonth, setCurrentMonth] = useState<GregorianMonth | FixedCalendarMonth | null>(null);
     const [currentYear, setCurrentYear] = useState<number>(today.getFullYear());
     const [hemisphere, setHemisphere] = useState<Hemisphere>("southern");
@@ -60,6 +64,7 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
             year: today.getFullYear()
         });
         setCurrentMonth(today.getMonthString({ type: viewMode }));
+        linkTo(`/${routes.monthView}`);
     }, [handleSelectDate, viewMode]);
 
     const handleSetLocation = useCallback((loc: LocationObject) => {

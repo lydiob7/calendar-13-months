@@ -13,6 +13,7 @@ import MonthView from "./MonthView";
 import Index from "./index";
 import MainDrawer from "@/components/navigation/MainDrawer";
 import Settings from "./Settings";
+import routes from "@/config/routes";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -44,9 +45,13 @@ export default function RootLayout() {
                             drawerContent={MainDrawer}
                             screenOptions={{ headerShown: false, swipeEdgeWidth: 0 }}
                         >
-                            <Drawer.Screen name="index" component={Index} />
-                            <Drawer.Screen name="MonthView" component={MonthView} />
-                            <Drawer.Screen name="Settings" component={Settings} options={{ headerShown: true }} />
+                            <Drawer.Screen name={routes.home} component={Index} />
+                            <Drawer.Screen name={routes.monthView} component={MonthView} />
+                            <Drawer.Screen
+                                name={routes.settings}
+                                component={Settings}
+                                options={{ headerShown: true }}
+                            />
                         </Drawer.Navigator>
                     </GestureHandlerRootView>
                 </CalendarContextProvider>

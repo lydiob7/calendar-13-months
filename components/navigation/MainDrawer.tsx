@@ -7,8 +7,10 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { useTranslationsContext } from "@/context/translationsContext";
+import routes from "@/config/routes";
 
 const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
+    const textColor = useThemeColor({}, "text");
     const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
     const tabIconSelectedColor = useThemeColor({}, "tabIconSelected");
 
@@ -30,15 +32,21 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
     const handleNavigateToMonthView = useCallback(() => {
         if (!currentMonth) {
             setCurrentYear(currentYear);
-            setCurrentMonth(today.getMonthString({ type: viewMode }));
-            handleSelectFirstDayOfTheMonth(today.getMonthString({ type: viewMode }), currentYear);
+            const monthToGo =
+                today.getFullYear() === currentYear
+                    ? today.getMonthString({ type: viewMode })
+                    : viewMode === "gregorian"
+                    ? "january"
+                    : "phussa";
+            setCurrentMonth(monthToGo);
+            handleSelectFirstDayOfTheMonth(monthToGo, currentYear);
         }
-        navigation.navigate("MonthView");
+        navigation.navigate(routes.monthView);
     }, [currentMonth, currentYear, today, viewMode]);
 
     const handleNavigateToYearView = useCallback(() => {
         setCurrentMonth(null);
-        navigation.navigate("index");
+        navigation.navigate(routes.home);
     }, []);
 
     const toggleCalendarMode = useCallback(() => {
@@ -63,19 +71,19 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
                     }}
                 >
                     <View style={[styles.navigationHeader, { borderBottomColor: tabIconDefaultColor }]}>
-                        <ThemedText>13 Month Calendar</ThemedText>
+                        <ThemedText style={styles.appName}>13 Month Calendar</ThemedText>
                     </View>
                     <View style={styles.navigationContainer}>
                         <Pressable onPress={handleNavigateToYearView} style={styles.menuItem}>
                             <MaterialCommunityIcons
                                 name="grid"
                                 size={26}
-                                color={!currentMonth ? tabIconSelectedColor : tabIconDefaultColor}
+                                color={!currentMonth ? tabIconSelectedColor : textColor}
                             />
                             <ThemedText
                                 style={[
                                     styles.menuItemText,
-                                    { color: !currentMonth ? tabIconSelectedColor : tabIconDefaultColor }
+                                    { color: !currentMonth ? tabIconSelectedColor : textColor }
                                 ]}
                             >
                                 {language.navigationMenu.yearView}
@@ -85,29 +93,29 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
                             <MaterialCommunityIcons
                                 name="calendar-month-outline"
                                 size={26}
-                                color={currentMonth ? tabIconSelectedColor : tabIconDefaultColor}
+                                color={currentMonth ? tabIconSelectedColor : textColor}
                             />
                             <ThemedText
                                 style={[
                                     styles.menuItemText,
-                                    { color: currentMonth ? tabIconSelectedColor : tabIconDefaultColor }
+                                    { color: currentMonth ? tabIconSelectedColor : textColor }
                                 ]}
                             >
                                 {language.navigationMenu.monthView}
                             </ThemedText>
                         </Pressable>
                         <Pressable onPress={toggleCalendarMode} style={styles.menuItem}>
-                            <MaterialCommunityIcons name="cached" size={26} color={tabIconDefaultColor} />
-                            <ThemedText style={[styles.menuItemText, { color: tabIconDefaultColor }]}>
+                            <MaterialCommunityIcons name="cached" size={26} color={textColor} />
+                            <ThemedText style={[styles.menuItemText, { color: textColor }]}>
                                 {language.navigationMenu.toggleView}
                             </ThemedText>
                         </Pressable>
                     </View>
 
                     <View style={[styles.navigationFooter, { borderTopColor: tabIconDefaultColor }]}>
-                        <Pressable onPress={() => navigation.navigate("Settings")} style={styles.menuItem}>
-                            <Ionicons name="settings-outline" size={26} color={tabIconDefaultColor} />
-                            <ThemedText style={[styles.menuItemText, { color: tabIconDefaultColor }]}>
+                        <Pressable onPress={() => navigation.navigate(routes.settings)} style={styles.menuItem}>
+                            <Ionicons name="settings-outline" size={26} color={textColor} />
+                            <ThemedText style={[styles.menuItemText, { color: textColor }]}>
                                 {language.navigationMenu.settings}
                             </ThemedText>
                         </Pressable>
@@ -121,6 +129,10 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
 export default MainDrawer;
 
 const styles = StyleSheet.create({
+    appName: {
+        fontSize: 20,
+        fontWeight: 500
+    },
     drawerContainer: {
         flex: 1,
         flexDirection: "column",

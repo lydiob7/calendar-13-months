@@ -6,6 +6,7 @@ import DateString from "@/types/DateString";
 
 function getAllDateStringsForDatesRange(dates: DateString[]) {
     if (dates.length !== 2) throw Error("This function expect two dates in the array");
+    if (dates[0] === dates[1]) return [dates[0]];
     let startDate = dates[0];
     let endDate = dates[1];
     if (compareAsc(startDate, endDate) === 1) {

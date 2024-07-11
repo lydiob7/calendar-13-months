@@ -1,6 +1,8 @@
+import routes from "@/config/routes";
 import { useCalendarContext } from "@/context/calendarContext";
 import { DAY_OUT_OF_TIME_KEY, LEAP_DAY_KEY } from "@/utils";
-import { useLinkTo } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { DrawerNavigationHelpers } from "@react-navigation/drawer/lib/typescript/src/types";
 import React, { FC } from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
@@ -11,7 +13,7 @@ interface DayOutOfTimeProps {
 
 const DayOutOfTime: FC<DayOutOfTimeProps> = ({ monthKey, isSingleMonthScreen }) => {
     const { currentYear, handleSelectFirstDayOfTheMonth, setCurrentMonth, setCurrentYear } = useCalendarContext();
-    const linkTo = useLinkTo();
+    const navigation = useNavigation<DrawerNavigationHelpers>();
 
     return (
         <View style={styles.day}>
@@ -23,7 +25,7 @@ const DayOutOfTime: FC<DayOutOfTimeProps> = ({ monthKey, isSingleMonthScreen }) 
                         setCurrentYear(currentYear);
                         setCurrentMonth(monthKey || DAY_OUT_OF_TIME_KEY);
                         handleSelectFirstDayOfTheMonth(monthKey || DAY_OUT_OF_TIME_KEY, currentYear);
-                        linkTo("/MonthView");
+                        navigation.navigate(routes.monthView);
                     }}
                 >
                     <Image source={require("@/assets/images/day-out-of-time.png")} style={styles.image} />
