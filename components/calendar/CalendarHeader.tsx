@@ -8,6 +8,7 @@ import { calculateNextMonth, calculatePreviousMonth } from "@/utils";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslationsContext } from "@/context/translationsContext";
 import { DrawerToggleButton } from "@react-navigation/drawer";
+import { useEventsContext } from "@/context/eventsContext";
 
 interface CalendarHeaderProps {}
 
@@ -29,6 +30,8 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
         setCurrentYear,
         today
     } = useCalendarContext();
+
+    const { handleToggleNewEventModal } = useEventsContext();
 
     const isCurrentYear = useMemo(
         () => today.getFullYear().toString() === currentYear.toString(),
@@ -102,12 +105,12 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                                 selectedValue={currentYear}
                                 onValueChange={(itemValue, itemIndex) => setCurrentYear(itemValue)}
                             >
-                                {Array.from(Array(5000).keys()).map((year) => (
+                                {Array.from(Array(5000 - 1754).keys()).map((year) => (
                                     <Picker.Item
                                         key={year}
-                                        label={year.toString()}
-                                        value={year}
-                                        color={currentYear === year ? tabIconSelectedColor : textColor}
+                                        label={(year + 1754).toString()}
+                                        value={year + 1754}
+                                        color={currentYear === year + 1754 ? tabIconSelectedColor : textColor}
                                         style={styles.yearTitle}
                                     />
                                 ))}
@@ -124,7 +127,7 @@ const CalendarHeader: FC<CalendarHeaderProps> = () => {
                             color={currentMonth ? tabIconSelectedColor : tabIconDefaultColor}
                         />
                     </Pressable>
-                    <Pressable>
+                    <Pressable onPress={handleToggleNewEventModal}>
                         <MaterialCommunityIcons name="plus" size={26} color={tabIconSelectedColor} />
                     </Pressable>
                 </View>

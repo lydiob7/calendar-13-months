@@ -4,7 +4,7 @@ import FixedCalendarMonth from "@/types/FixedCalendarMonth";
 import GregorianMonth from "@/types/GregorianMonth";
 import Hemisphere from "@/types/Hemisphere";
 import SelectedDate from "@/types/SelectedDate";
-import { CustomDate } from "@/utils";
+import { CustomDate, monthDaysMap } from "@/utils";
 import { useLinkTo } from "@react-navigation/native";
 import { LocationObject } from "expo-location";
 import { Dispatch, ReactNode, SetStateAction, createContext, useCallback, useContext, useMemo, useState } from "react";
@@ -20,6 +20,7 @@ interface CalendarContextProps {
     hemisphere: Hemisphere;
     location: LocationObject | null;
     locationInformation: GetLocationInfoResponse | null;
+    monthDays: number;
     selectedDate: SelectedDate | null;
     setCurrentMonth: Dispatch<SetStateAction<GregorianMonth | FixedCalendarMonth | null>>;
     setCurrentYear: Dispatch<SetStateAction<number>>;
@@ -80,6 +81,16 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
             .catch((err) => console.log(err));
     }, []);
 
+    const monthDays = useMemo(
+        () =>
+            currentMonth
+                ? monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear())[
+                      currentMonth
+                  ] || monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear()).default
+                : monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear()).default,
+        [currentMonth, currentYear]
+    );
+
     const values = useMemo(
         () => ({
             currentMonth,
@@ -91,6 +102,7 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
             hemisphere,
             location,
             locationInformation,
+            monthDays,
             selectedDate,
             setCurrentMonth,
             setCurrentYear,
@@ -108,6 +120,7 @@ const CalendarContextProvider = ({ children }: { children: ReactNode }) => {
             hemisphere,
             location,
             locationInformation,
+            monthDays,
             selectedDate,
             setCurrentMonth,
             setCurrentYear,

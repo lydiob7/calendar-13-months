@@ -1,17 +1,15 @@
 import { ThemedText } from "@/components/ThemedText";
 import { useCalendarContext } from "@/context/calendarContext";
 import {
-    CustomDate,
     DAY_OUT_OF_TIME_KEY,
     LEAP_DAY_KEY,
     calculateDayOfTheWeek,
     calculateStartDay,
     daysOfTheWeek,
     divideMonthIntoWeeks,
-    monthDaysMap,
     monthsMap
 } from "@/utils";
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import DayOutOfTime from "./DayOutOfTime";
 import Week from "./Week";
@@ -19,20 +17,19 @@ import GridView from "../GridView";
 import EventsList from "./EventsList";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useTranslationsContext } from "@/context/translationsContext";
-import mainApiService from "@/services/mainApiService";
+import { useEventsContext } from "@/context/eventsContext";
 
 interface MonthViewScreenProps {}
 
 const MonthViewScreen: FC<MonthViewScreenProps> = () => {
-    const { language } = useTranslationsContext();
-
     const backgroundColor = useThemeColor({}, "background");
     const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
     const textColor = useThemeColor({}, "text");
 
-    const [dayEvents, setDayEvents] = useState<string[]>([]);
+    const { language } = useTranslationsContext();
+    const { monthEvents } = useEventsContext();
 
-    const { currentMonth, currentYear, selectedDate, today, viewMode } = useCalendarContext();
+    const { currentMonth, currentYear, monthDays, selectedDate, today, viewMode } = useCalendarContext();
 
     const isCurrentYear = useMemo(
         () => today.getFullYear()?.toString() === currentYear?.toString(),
@@ -43,44 +40,15 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
         [currentMonth, isCurrentYear, today, viewMode]
     );
 
-    const days = useMemo(
-        () =>
-            currentMonth
-                ? monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear())[
-                      currentMonth
-                  ] || monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear()).default
-                : monthDaysMap(new CustomDate(`${currentYear}-02-02`, { withoutTime: true }).isLeapYear()).default,
-        [currentMonth, currentYear]
-    );
-
     const startDay = useMemo(
         () => (currentMonth ? calculateStartDay(currentMonth, currentYear) : 0),
         [currentMonth, currentYear]
     );
 
     const selectedDateDay = useMemo(
-        () => calculateDayOfTheWeek({ selectedDate, days, startDay }),
+        () => calculateDayOfTheWeek({ selectedDate, days: monthDays, startDay }),
         [selectedDate, viewMode]
     );
-
-    useEffect(() => {
-        const isLooseDay = currentMonth === LEAP_DAY_KEY || currentMonth === DAY_OUT_OF_TIME_KEY;
-        if (currentMonth)
-            mainApiService
-                .getRangeEvents({
-                    startDate: {
-                        date: 1,
-                        month: currentMonth,
-                        year: currentYear
-                    },
-                    endDate: {
-                        date: isLooseDay ? 1 : days,
-                        month: currentMonth,
-                        year: currentYear
-                    }
-                })
-                .then((response) => setDayEvents(response));
-    }, [currentMonth, currentYear, days]);
 
     const dayOutOfTime = useMemo(() => currentMonth === DAY_OUT_OF_TIME_KEY, [currentMonth]);
     const leapDay = useMemo(() => currentMonth === LEAP_DAY_KEY, [currentMonth]);
@@ -111,9 +79,9 @@ const MonthViewScreen: FC<MonthViewScreenProps> = () => {
                             { backgroundColor: backgroundColor, borderBottomColor: tabIconDefaultColor }
                         ]}
                     />
-                    {divideMonthIntoWeeks({ days, startDay }).map((week, i) => (
+                    {divideMonthIntoWeeks({ days: monthDays, startDay }).map((week, i) => (
                         <Week
-                            dayEvents={dayEvents}
+                            dayEvents={monthEvents}
                             days={week}
                             isCurrentMonth={isCurrentMonth}
                             key={i}

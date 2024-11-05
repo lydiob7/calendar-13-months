@@ -1,48 +1,63 @@
-import DateString from "./DateString";
-import Time from "./Time";
+import { z } from "zod";
 
-type EventAlert = "event-time" | "5min" | "10min" | "15min" | "30min" | "1h" | "2h" | "1d" | "2d" | "1w";
-type TravelTime = "5min" | "10min" | "15min" | "30min" | "1h" | "1h30min" | "2h";
-type EventRepeat = "day" | "week" | "2weeks" | "month" | "year";
+const EventBaseScheduleSchema = z.object({
+    allDay: z.boolean(),
+    starts: z.object({
+        date: z.string().regex(/[0-9]{4}-[0-9]{2}-[0-9]{2}/),
+        time: z
+            .string()
+            .regex(/[0-9]{2}:[0-9]{2}/)
+            .optional()
+    }),
+    ends: z.object({
+        date: z.string().regex(/[0-9]{4}-[0-9]{2}-[0-9]{2}/),
+        time: z
+            .string()
+            .regex(/[0-9]{2}:[0-9]{2}/)
+            .optional()
+    }),
+    punctualEvent: z.boolean().optional()
+});
 
-interface BaseEvent {
-    alert?: EventAlert;
-    id: string;
-    schedule: {
-        allDay: boolean;
-        ends: {
-            date: DateString;
-            time?: Time;
-        };
-        starts: {
-            date: DateString;
-            time?: Time;
-        };
-        punctualEvent?: boolean;
-    };
-    title: string;
-}
+const BaseEventSchema = z.object({
+    alert: z.enum(["event-time", "5min", "10min", "15min", "30min", "1h", "2h", "1d", "2d", "1w"]).optional(),
+    id: z.string(),
+    title: z.string().min(1),
+    schedule: EventBaseScheduleSchema
+});
 
-export interface CustomEvent extends BaseEvent {
-    type: "custom";
-    location?: string;
-    notes?: string;
-    repeat?: EventRepeat;
-    schedule: BaseEvent["schedule"] & {
-        travelTime?: TravelTime;
-    };
-    url?: string;
-}
+type BaseEvent = z.infer<typeof BaseEventSchema>;
+export type EventAlert = BaseEvent["alert"];
 
-export interface MoonPhaseEvent extends BaseEvent {
-    type: "moon-phase";
-    phaseEmoji: string;
-}
+export const CustomEventSchema = BaseEventSchema.extend({
+    type: z.literal("custom"),
+    location: z.string().optional(),
+    notes: z.string().optional(),
+    repeat: z.enum(["day", "week", "2weeks", "month", "year"]).optional(),
+    schedule: EventBaseScheduleSchema.extend({
+        travelTime: z.enum(["5min", "10min", "15min", "30min", "1h", "1h30min", "2h"]).optional()
+    }),
+    url: z.string().url("Provide a valid URL").optional()
+});
 
-export interface SolarEvent extends BaseEvent {
-    type: "solar-event";
-    solarType: "equinox" | "solstice";
-}
+export type CustomEvent = z.infer<typeof CustomEventSchema>;
+
+export type TravelTime = CustomEvent["schedule"]["travelTime"];
+export type EventRepeat = CustomEvent["repeat"];
+
+const MoonPhaseEventSchema = BaseEventSchema.extend({
+    type: z.literal("moon-phase"),
+    phaseEmoji: z.string()
+});
+
+export type MoonPhaseEvent = z.infer<typeof MoonPhaseEventSchema>;
+
+const SolarEventSchema = BaseEventSchema.extend({
+    type: z.literal("solar-event"),
+    solarType: z.enum(["equinox", "solstice"])
+});
+
+export type SolarEvent = z.infer<typeof SolarEventSchema>;
 
 type Event = CustomEvent | MoonPhaseEvent | SolarEvent;
 

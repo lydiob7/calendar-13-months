@@ -35,7 +35,7 @@ export default TranslationsContextProvider;
 export function useTranslationsContext() {
     const context = useContext(TranslationsContext);
 
-    if (!context) throw new Error("useTranslationsContext should be used inside of Calendar Context Provider");
+    if (!context) throw new Error("useTranslationsContext should be used inside of Translations Context Provider");
 
     return context;
 }

@@ -1,29 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 import { useTranslationsContext } from "@/context/translationsContext";
 import EventItem from "./EventItem";
-import { useCalendarContext } from "@/context/calendarContext";
-import Event from "@/types/Event";
-import mainApiService from "@/services/mainApiService";
 import AstrologicalEvents from "./AstrologicalEvents";
+import { useEventsContext } from "@/context/eventsContext";
 
 const EventsList = () => {
     const { language } = useTranslationsContext();
-    const { selectedDate } = useCalendarContext();
 
-    const [data, setData] = useState<Event[]>([]);
-
-    useEffect(() => {
-        if (selectedDate) mainApiService.getDayEvents(selectedDate).then((res) => setData(res));
-    }, [selectedDate]);
+    const { dayEvents } = useEventsContext();
 
     return (
         <View style={styles.container}>
             <AstrologicalEvents />
-            {!!data.length ? (
+            {!!dayEvents.length ? (
                 <FlatList
-                    data={data}
+                    data={dayEvents}
                     style={styles.eventsList}
                     ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
                     renderItem={({ item }) => <EventItem {...item} />}

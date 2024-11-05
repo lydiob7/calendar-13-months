@@ -15,6 +15,8 @@
     },
     "common": {
         "allDayTitle": "All day",
+        "cancelTitle": "Cancel",
+        "deleteTitle": "Delete",
         "eventsTitle": "Events",
         "fromTitle": "From",
         "loadingTitle": "Loading",
@@ -22,7 +24,9 @@
         "monthTitle": "Month",
         "moonPhaseTitle": "Moon Phase",
         "moonSignTitle": "Moon Sign",
+        "newEventTitle": "New Event",
         "noEventsTitle": "No events",
+        "saveTitle": "Save",
         "sunSignTitle": "Sun Sign",
         "toTitle": "To",
         "yearTitle": "Year"

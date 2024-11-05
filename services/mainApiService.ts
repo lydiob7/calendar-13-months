@@ -1,7 +1,7 @@
-import { eventsDB } from "@/@fake-db";
+import { eventsDB } from "@/@internal-db";
+import { CustomEvent } from "@/types/Event";
 import SelectedDate from "@/types/SelectedDate";
 import { getGregorianEquivalent } from "@/utils";
-import axios from "axios";
 
 interface GetMonthEventsProps {
     endDate: SelectedDate;
@@ -10,6 +10,10 @@ interface GetMonthEventsProps {
 
 class MainApiService {
     baseUrl = "";
+
+    createEvent(event: CustomEvent) {
+        return eventsDB.addEvent(event);
+    }
 
     getDayEvents(selectedDate: SelectedDate) {
         return eventsDB.getDayEvents(getGregorianEquivalent(selectedDate));

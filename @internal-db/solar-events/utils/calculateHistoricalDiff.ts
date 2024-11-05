@@ -1,4 +1,4 @@
-import { daysFromMil } from "@/@fake-db/utils";
+import { daysFromMil } from "@/@internal-db/utils";
 
 export function calculateHistoricalDiff(historical: string[]) {
     if (historical.length < 2) return 0;

@@ -1,5 +1,5 @@
-import Event from "@/types/Event";
-import { CustomDate, getAllDateStringsForDatesRange } from "@/utils";
+import Event, { CustomEvent } from "@/types/Event";
+import { CustomDate, getAllDateStringsForDatesRange, getStoredData, storeData } from "@/utils";
 import { calculateMoonPhasesForRange, createMoonPhaseEvent, orderDayEvents } from "./utils";
 import { randomUUID } from "expo-crypto";
 import DateString from "@/types/DateString";
@@ -11,27 +11,28 @@ interface GetMonthEventsProps {
 }
 
 class EventsDB {
-    items: Event[] = [
-        {
-            id: randomUUID(),
-            type: "custom",
-            schedule: {
-                allDay: false,
-                ends: {
-                    date: "2024-07-05",
-                    time: "14:00"
-                },
-                starts: {
-                    date: "2024-07-05",
-                    time: "13:00"
-                }
-            },
-            title: "First event with a very long title because I want to test the elipsis",
-            notes: "Ac orci commodo eget interdum leo consectetur massa eu molestie mi bibendum suspendisse nulla enim mi portaest tristique metus erat elementum purus condimentum ipsum diam. Adipiscing sollicitudin tristique interdum interdum quisque sed sit ac scelerisque aliquam et euismod pellentesque congue purus nisi sed amet fusce facilisis commodo proin nulla congue.",
-            location: "https://meet.google.com/efe-fwef",
-            url: "https://tomiscattini.com"
+    items: Event[];
+
+    constructor() {
+        this.items = [];
+        getStoredData("user-items")
+            .then((items) => {
+                this.items = items || [];
+            })
+            .catch(() => {
+                this.items = [];
+            });
+    }
+
+    async addEvent(newEvent: CustomEvent) {
+        const newItemsArray = [...this.items, newEvent];
+        const success = await storeData("user-items", newItemsArray);
+        if (success) {
+            this.items = newItemsArray;
+            return true;
         }
-    ];
+        return false;
+    }
 
     getDayEvents(selectedDate: DateString) {
         const dayEvents = this.items.filter((event) => {
