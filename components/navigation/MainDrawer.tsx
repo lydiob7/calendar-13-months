@@ -1,18 +1,20 @@
-import { useCalendarContext } from "@/context/calendarContext";
-import React, { FC, useCallback } from "react";
-import { Dimensions, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, View } from "react-native";
-import { ThemedText } from "../ThemedText";
-import { toggleCurrentMonthViewMode } from "@/utils";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useThemeColor } from "@/hooks/useThemeColor";
-import { DrawerContentComponentProps } from "@react-navigation/drawer";
-import { useTranslationsContext } from "@/context/translationsContext";
-import routes from "@/config/routes";
+import { useCalendarContext } from '@/context/calendarContext';
+import React, { FC, useCallback, useMemo, useState } from 'react';
+import { Dimensions, Platform, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, View } from 'react-native';
+import { ThemedText } from '../ThemedText';
+import { toggleCurrentMonthViewMode } from '@/utils';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { DrawerContentComponentProps } from '@react-navigation/drawer';
+import { useTranslationsContext } from '@/context/translationsContext';
+import routes from '@/config/routes';
 
 const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
-    const textColor = useThemeColor({}, "text");
-    const tabIconDefaultColor = useThemeColor({}, "tabIconDefault");
-    const tabIconSelectedColor = useThemeColor({}, "tabIconSelected");
+    const textColor = useThemeColor({}, 'text');
+    const tabIconDefaultColor = useThemeColor({}, 'tabIconDefault');
+    const tabIconSelectedColor = useThemeColor({}, 'tabIconSelected');
+
+    const [isSettingsPage, setIsSettingsPage] = useState<boolean>(false);
 
     const { language } = useTranslationsContext();
 
@@ -30,14 +32,15 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
     } = useCalendarContext();
 
     const handleNavigateToMonthView = useCallback(() => {
+        setIsSettingsPage(false);
         if (!currentMonth) {
             setCurrentYear(currentYear);
             const monthToGo =
                 today.getFullYear() === currentYear
                     ? today.getMonthString({ type: viewMode })
-                    : viewMode === "gregorian"
-                    ? "january"
-                    : "phussa";
+                    : viewMode === 'gregorian'
+                    ? 'january'
+                    : 'phussa';
             setCurrentMonth(monthToGo);
             handleSelectFirstDayOfTheMonth(monthToGo, currentYear);
         }
@@ -45,6 +48,7 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
     }, [currentMonth, currentYear, today, viewMode]);
 
     const handleNavigateToYearView = useCallback(() => {
+        setIsSettingsPage(false);
         setCurrentMonth(null);
         navigation.navigate(routes.home);
     }, []);
@@ -56,7 +60,7 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
             setCurrentMonth(newSelectedDate.month);
             handleSelectDate(newSelectedDate);
         }
-        setViewMode((prev) => (prev === "fixed" ? "gregorian" : "fixed"));
+        setViewMode((prev) => (prev === 'fixed' ? 'gregorian' : 'fixed'));
         navigation.closeDrawer();
     }, [currentMonth, handleSelectDate, selectedDate]);
 
@@ -65,9 +69,9 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
             <ScrollView>
                 <View
                     style={{
-                        flexDirection: "column",
+                        flexDirection: 'column',
                         padding: 16,
-                        height: Dimensions.get("window").height
+                        height: Dimensions.get('window').height - 80
                     }}
                 >
                     <View style={[styles.navigationHeader, { borderBottomColor: tabIconDefaultColor }]}>
@@ -78,12 +82,12 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
                             <MaterialCommunityIcons
                                 name="grid"
                                 size={26}
-                                color={!currentMonth ? tabIconSelectedColor : textColor}
+                                color={!currentMonth && !isSettingsPage ? tabIconSelectedColor : textColor}
                             />
                             <ThemedText
                                 style={[
                                     styles.menuItemText,
-                                    { color: !currentMonth ? tabIconSelectedColor : textColor }
+                                    { color: !currentMonth && !isSettingsPage ? tabIconSelectedColor : textColor }
                                 ]}
                             >
                                 {language.navigationMenu.yearView}
@@ -93,12 +97,12 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
                             <MaterialCommunityIcons
                                 name="calendar-month-outline"
                                 size={26}
-                                color={currentMonth ? tabIconSelectedColor : textColor}
+                                color={currentMonth && !isSettingsPage ? tabIconSelectedColor : textColor}
                             />
                             <ThemedText
                                 style={[
                                     styles.menuItemText,
-                                    { color: currentMonth ? tabIconSelectedColor : textColor }
+                                    { color: currentMonth && !isSettingsPage ? tabIconSelectedColor : textColor }
                                 ]}
                             >
                                 {language.navigationMenu.monthView}
@@ -113,9 +117,24 @@ const MainDrawer: FC<DrawerContentComponentProps> = ({ navigation }) => {
                     </View>
 
                     <View style={[styles.navigationFooter, { borderTopColor: tabIconDefaultColor }]}>
-                        <Pressable onPress={() => navigation.navigate(routes.settings)} style={styles.menuItem}>
-                            <Ionicons name="settings-outline" size={26} color={textColor} />
-                            <ThemedText style={[styles.menuItemText, { color: textColor }]}>
+                        <Pressable
+                            onPress={() => {
+                                setIsSettingsPage(true);
+                                navigation.navigate(routes.settings);
+                            }}
+                            style={styles.menuItem}
+                        >
+                            <Ionicons
+                                name="settings-outline"
+                                size={26}
+                                color={isSettingsPage ? tabIconSelectedColor : textColor}
+                            />
+                            <ThemedText
+                                style={[
+                                    styles.menuItemText,
+                                    { color: isSettingsPage ? tabIconSelectedColor : textColor }
+                                ]}
+                            >
                                 {language.navigationMenu.settings}
                             </ThemedText>
                         </Pressable>
@@ -135,13 +154,13 @@ const styles = StyleSheet.create({
     },
     drawerContainer: {
         flex: 1,
-        flexDirection: "column",
-        justifyContent: "space-between",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
     },
     menuItem: {
-        flexDirection: "row",
-        alignItems: "center",
+        flexDirection: 'row',
+        alignItems: 'center',
         gap: 8,
         paddingVertical: 12
     },

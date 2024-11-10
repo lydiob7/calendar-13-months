@@ -106,6 +106,12 @@
         "toggleView": "Toggle calendar",
         "settings": "Settings"
     },
+    "settings": {
+        "darkTitle": "Dark",
+        "lightTitle": "Light",
+        "languageTitle": "Language",
+        "themeTitle": "Theme"
+    },
     "solarEvents": {
         "equinox": "Equinox",
         "solstice": "Solstice",

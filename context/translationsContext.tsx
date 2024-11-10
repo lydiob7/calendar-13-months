@@ -1,13 +1,13 @@
-import { ReactNode, createContext, useCallback, useContext, useMemo, useState } from "react";
-import english from "../config/locales/english.json";
-import spanish from "../config/locales/spanish.json";
+import { ReactNode, createContext, useCallback, useContext, useMemo, useState } from 'react';
+import english from '../config/locales/english.json';
+import spanish from '../config/locales/spanish.json';
 
 const languagesMap = {
     en: english,
     es: spanish
 } as const;
 
-type AvailableLanguage = keyof typeof languagesMap;
+export type AvailableLanguage = keyof typeof languagesMap;
 
 interface TranslationsContextProps {
     availableLanguages: AvailableLanguage[];
@@ -35,7 +35,7 @@ export default TranslationsContextProvider;
 export function useTranslationsContext() {
     const context = useContext(TranslationsContext);
 
-    if (!context) throw new Error("useTranslationsContext should be used inside of Translations Context Provider");
+    if (!context) throw new Error('useTranslationsContext should be used inside of Translations Context Provider');
 
     return context;
 }

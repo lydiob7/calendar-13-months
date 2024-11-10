@@ -106,6 +106,12 @@
         "toggleView": "Alternar calendario",
         "settings": "Ajustes"
     },
+    "settings": {
+        "darkTitle": "Oscuro",
+        "lightTitle": "Claro",
+        "languageTitle": "Lenguaje",
+        "themeTitle": "Tema"
+    },
     "solarEvents": {
         "equinox": "Equinoccio",
         "solstice": "Solsticio",
