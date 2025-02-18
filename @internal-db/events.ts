@@ -11,17 +11,18 @@ interface GetMonthEventsProps {
 }
 
 class EventsDB {
-    items: Event[];
+    items: Event[] = [];
 
-    constructor() {
-        this.items = [];
-        getStoredData("user-items")
-            .then((items) => {
-                this.items = items || [];
-            })
-            .catch(() => {
-                this.items = [];
-            });
+    constructor() {}
+
+    async syncStoreData() {
+        try {
+            const items = await getStoredData("user-items");
+            this.items = items || [];
+        } catch (error) {
+            this.items = [];
+            console.log(error);
+        }
     }
 
     async addEvent(newEvent: CustomEvent) {
@@ -99,7 +100,7 @@ class EventsDB {
         // Get all intermediate dates from multiple days events
         if (multipleDayEvents.length > 0) {
             multipleDayEvents.forEach((eventRange) => {
-                dayStrings.push(...getAllDateStringsForDatesRange(eventRange));
+                dayStrings.push(...getAllDateStringsForDatesRange(eventRange as DateString[]));
             });
         }
         // Return array of date strings removing duplicates
@@ -108,5 +109,9 @@ class EventsDB {
 }
 
 const eventsDB = new EventsDB();
+
+(async () => {
+    eventsDB.syncStoreData();
+})();
 
 export default eventsDB;
