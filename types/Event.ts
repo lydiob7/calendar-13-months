@@ -1,5 +1,21 @@
 import { z } from "zod";
 
+export const alertOptions = [
+    "none",
+    "event-time",
+    "5min",
+    "10min",
+    "15min",
+    "30min",
+    "1h",
+    "2h",
+    "1d",
+    "2d",
+    "1w"
+] as const;
+export const repeatOptions = ["none", "day", "week", "2weeks", "month", "year"] as const;
+export const travelTimeOptions = ["none", "5min", "10min", "15min", "30min", "1h", "1h30min", "2h"] as const;
+
 const EventBaseScheduleSchema = z.object({
     allDay: z.boolean(),
     starts: z.object({
@@ -20,7 +36,7 @@ const EventBaseScheduleSchema = z.object({
 });
 
 const BaseEventSchema = z.object({
-    alert: z.enum(["event-time", "5min", "10min", "15min", "30min", "1h", "2h", "1d", "2d", "1w"]).optional(),
+    alert: z.enum(alertOptions).optional(),
     id: z.string(),
     title: z.string().min(1),
     schedule: EventBaseScheduleSchema
@@ -33,9 +49,9 @@ export const CustomEventSchema = BaseEventSchema.extend({
     type: z.literal("custom"),
     location: z.string().optional(),
     notes: z.string().optional(),
-    repeat: z.enum(["day", "week", "2weeks", "month", "year"]).optional(),
+    repeat: z.enum(repeatOptions).optional(),
     schedule: EventBaseScheduleSchema.extend({
-        travelTime: z.enum(["5min", "10min", "15min", "30min", "1h", "1h30min", "2h"]).optional()
+        travelTime: z.enum(travelTimeOptions).optional()
     }),
     url: z.string().url("Provide a valid URL").optional()
 });

@@ -1,18 +1,20 @@
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+import "react-native-reanimated";
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import MonthView from './MonthView';
-import Index from './index';
-import MainDrawer from '@/components/navigation/MainDrawer';
-import Settings from './Settings';
-import routes from '@/config/routes';
-import Contexts from '@/context/Contexts';
-import NewEventModal from '@/components/calendar/NewEventModal';
-import { useTranslationsContext } from '@/context/translationsContext';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import MonthView from "./MonthView";
+import Index from "./index";
+import MainDrawer from "@/components/navigation/MainDrawer";
+import Settings from "./Settings";
+import routes from "@/config/routes";
+import Contexts from "@/context/Contexts";
+import NewEventModal from "@/components/calendar/NewEventModal";
+import { useTranslationsContext } from "@/context/translationsContext";
+import { Button, View } from "react-native";
+import { Link } from "expo-router";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -28,7 +30,17 @@ const Drawers = () => {
             <Drawer.Screen
                 name={routes.settings}
                 component={Settings}
-                options={{ headerShown: true, headerTitle: language.navigationMenu.settings }}
+                options={{
+                    headerLeft: () => {
+                        return (
+                            <Link asChild href="/">
+                                <Button title="Home" />
+                            </Link>
+                        );
+                    },
+                    headerShown: true,
+                    headerTitle: language.navigationMenu.settings
+                }}
             />
         </Drawer.Navigator>
     );
@@ -36,7 +48,7 @@ const Drawers = () => {
 
 export default function RootLayout() {
     const [loaded] = useFonts({
-        SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf')
+        SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf")
     });
 
     useEffect(() => {

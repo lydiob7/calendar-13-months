@@ -24,8 +24,10 @@
         "monthTitle": "Mes",
         "moonPhaseTitle": "Fase lunar",
         "moonSignTitle": "Signo lunar",
+        "neverTitle": "Nunca",
         "newEventTitle": "Nuevo evento",
         "noEventsTitle": "No hay eventos",
+        "noneTitle": "Ninguno",
         "saveTitle": "Guardar",
         "sunSignTitle": "Signo solar",
         "toTitle": "Hasta",
@@ -52,9 +54,47 @@
         }
     },
     "events": {
+        "alertTitle": "Alerta",
+        "alertOptions": {
+            "none": "Ninguna",
+            "event-time": "Al momento del evento",
+            "5min": "5 minutos antes",
+            "10min": "10 minutos antes",
+            "15min": "15 minutos antes",
+            "30min": "30 minutos antes",
+            "1h": "1 hora antes",
+            "2h": "2 horas antes",
+            "1d": "1 día antes",
+            "2d": "2 días antes",
+            "1w": "1 semana antes"
+        },
         "astrologicalInfoTitle": "Información astrológica",
+        "endsTitle": "Termina",
+        "invalidEndDate": "El evento no puede terminar antes de que empiece",
         "locationTitle": "Lugar",
+        "nameTitle": "Nombre",
         "notesTitle": "Notas",
+        "repeatOptions": {
+            "none": "Nunca",
+            "day": "Diariamente",
+            "week": "Semanalmente",
+            "2weeks": "Cada 2 semanas",
+            "month": "Mensualmente",
+            "year": "Anualmente"
+        },
+        "repeatTitle": "Repetir",
+        "startsTitle": "Empieza",
+        "travelTimeTitle": "Tiempo de viaje",
+        "travelTimeOptions": {
+            "none": "No",
+            "5min": "5 minutos",
+            "10min": "10 minutos",
+            "15min": "15 minutos",
+            "30min": "30 minutos",
+            "1h": "1 hora",
+            "1h30min": "1 hora 30 minutos",
+            "2h": "2 horas"
+        },
         "urlTitle": "URL"
     },
     "languages": {
